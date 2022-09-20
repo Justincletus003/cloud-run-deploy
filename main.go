@@ -15,8 +15,8 @@ func main() {
         port = "8080"
     }
     log.Printf("listening on port %s", port)
-    if err = http.ListenAndServe(":"+port); err != nil {
-        log.Fatal(err)        
+    if err := http.ListenAndServe(":"+port, nil); err != nil {
+        log.Fatal(err) 
     }    
     
 }
@@ -27,5 +27,5 @@ func handler(w http.ResponseWriter, r *http.Request){
         name = "World"
     }
     w.WriteHeader(http.StatusOK)
-    fmt.Fprintf(w, "hello %s", name)
+    fmt.Fprintf(w, "hello %s\n", name)
 }
