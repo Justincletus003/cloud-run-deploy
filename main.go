@@ -26,6 +26,6 @@ func handler(w http.ResponseWriter, r *http.Request){
     if name == "" {
         name = "World"
     }
-    w.HeaderWriter(http.StatusOk)
+    w.WriteHeader(http.StatusOK)
     fmt.Fprintf(w, "hello %s", name)
 }
