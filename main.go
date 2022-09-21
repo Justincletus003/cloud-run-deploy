@@ -9,8 +9,9 @@ import (
 	"os"
 
 	_ "github.com/go-sql-driver/mysql"
-    // "github.com/golang-migrate/migrate/v4"
+    "github.com/golang-migrate/migrate/v4"
 	"github.com/golang-migrate/migrate/v4/database/mysql"
+    _ "github.com/golang-migrate/migrate/v4/source/file"
 	_ "github.com/golang-migrate/migrate/v4/source/iofs"
 	_ "github.com/spf13/cobra"
 )
@@ -125,32 +126,24 @@ func handler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	res := db.Ping()
-	if res != nil {
-		w.Write([]byte(res.Error()))
-		return
-	}
-    fmt.Print("driver testing\n")
 	dbDriver, err := mysql.WithInstance(db, &mysql.Config{})
 	if err != nil {
 	    w.Write([]byte(err.Error()))
 	    return
 	}
-    fmt.Printf("%v", dbDriver)
-    fmt.Print("driver end testing\n")
-	// w.Write([]byte("testing driver output"))
 
-	// m, err := migrate.NewWithDatabaseInstance(
-	//     "file:///migrations",
-	//     "mysql",
-	//     dbDriver,
-	// )
-	// if err != nil {
-	//     w.Write([]byte(err.Error()))
-	//     return
-	// }
-
-	// m.Steps(2)
+	m, err := migrate.NewWithDatabaseInstance(
+	    "file:///migrations",
+	    "mysql",
+	    dbDriver,
+	)
+	if err != nil {
+        w.WriteHeader(http.StatusInternalServerError)
+	    w.Write([]byte(err.Error()))
+	    return
+	}
+	m.Steps(2)
+    fmt.Print("migration tested\n")
 	// fmt.Println(dbDriver)
 	w.WriteHeader(http.StatusOK)
 	fmt.Fprintln(w, "database successfully connected")
