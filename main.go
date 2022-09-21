@@ -36,6 +36,7 @@ func handler(w http.ResponseWriter, r *http.Request){
     // dbURI := fmt.Sprintf("%s:%s@unix(/%s)/%s?parseTime=true&multiStatements=true", user, password, host, dbname)
 
     // _, err := sql.Open("mysql", dbURI)
+    fmt.Println("testing build")
 
     if err == "" {
         w.WriteHeader(http.StatusInternalServerError)
