@@ -8,9 +8,9 @@ import (
 	"os"
 
 	_ "github.com/go-sql-driver/mysql"
-    // "github.com/golang-migrate/migrate/v4"
-    // "github.com/golang-migrate/migrate/v4/database/mysql"
-    // _ "github.com/golang-migrate/migrate/v4/source/file"
+    "github.com/golang-migrate/migrate/v4"
+    "github.com/golang-migrate/migrate/v4/database/mysql"
+    _ "github.com/golang-migrate/migrate/v4/source/file"
 )
 
 func main() {
@@ -53,7 +53,7 @@ func handler(w http.ResponseWriter, r *http.Request){
 
     host := "/cloudsql/pantheon-lighthouse-poc:us-central1:lighthousedb"
 
-    dbURI := fmt.Sprintf("%s:%s@unix(/%s)/%s?parseTime=true", user, password, host, dbname)
+    dbURI := fmt.Sprintf("%s:%s@unix(/%s)/%s?parseTime=true&multiStatements=true", user, password, host, dbname)
 
     db, err := sql.Open("mysql", dbURI)
     if err != nil {
@@ -68,36 +68,36 @@ func handler(w http.ResponseWriter, r *http.Request){
         return
     }
 
-    createQuery := "CREATE TABLE test(user varchar(50))"
+    // createQuery := "CREATE TABLE test(user varchar(50))"
 
-    createTable, err := db.Exec(createQuery)
+    // createTable, err := db.Exec(createQuery)
+    // if err != nil {
+    //     w.Write([]byte(err.Error()))
+    //     return
+    // }
+    // value, _ := createTable.RowsAffected()
+    // fmt.Fprintln(w, value)
+    // w.Write([]byte(strings.createTable.LastInsertId()))
+
+    // w.Write([]byte("testing driver "))
+    dbDriver, err := mysql.WithInstance(db, &mysql.Config{})
     if err != nil {
         w.Write([]byte(err.Error()))
         return
     }
-    value, _ := createTable.RowsAffected()
-    fmt.Fprintln(w, value)
-    // w.Write([]byte(strings.createTable.LastInsertId()))
-
-    // w.Write([]byte("testing driver "))
-    // dbDriver, err := mysql.WithInstance(db, &mysql.Config{})
-    // if err != nil {
-    //     w.Write([]byte(err.Error()))
-    //     return
-    // }
     // w.Write([]byte("testing driver output"))
 
-    // m, err := migrate.NewWithDatabaseInstance(
-    //     "file:///migrations",
-    //     "mysql", 
-    //     dbDriver,
-    // )
-    // if err != nil {
-    //     w.Write([]byte(err.Error()))
-    //     return
-    // }
+    m, err := migrate.NewWithDatabaseInstance(
+        "file:///migrations",
+        "mysql", 
+        dbDriver,
+    )
+    if err != nil {
+        w.Write([]byte(err.Error()))
+        return
+    }
     
-    // m.Steps(2)
+    m.Steps(2)
     // fmt.Println(dbDriver)
     w.WriteHeader(http.StatusOK)
     fmt.Fprintln(w, "database successfully connected")
