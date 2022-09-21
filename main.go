@@ -7,6 +7,8 @@ import (
 	"log"
 	"net/http"
 	"os"
+    "path/filepath"
+    "runtime"
 
 	_ "github.com/go-sql-driver/mysql"
     "github.com/golang-migrate/migrate/v4"
@@ -79,6 +81,11 @@ import (
 //     fmt.Printf("end init function\n")
 // }
 
+var (
+    _, b, _, _ = runtime.Caller(0)
+    basepath   = filepath.Dir(b)
+)
+
 func main() {
 	fmt.Print("Starting server ")
 	http.HandleFunc("/", handler)
@@ -131,6 +138,7 @@ func handler(w http.ResponseWriter, r *http.Request) {
 	    w.Write([]byte(err.Error()))
 	    return
 	}
+    fmt.Println(basepath)
 
 	m, err := migrate.NewWithDatabaseInstance(
 	    "file://../migrations",
