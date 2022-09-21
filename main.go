@@ -8,9 +8,9 @@ import (
 	"os"
 
 	_ "github.com/go-sql-driver/mysql"
-    _ "github.com/golang-migrate/migrate/v4"
+    "github.com/golang-migrate/migrate/v4"
     "github.com/golang-migrate/migrate/v4/database/mysql"
-    // _ "github.com/golang-migrate/migrate/v4/database/mysql"
+    _ "github.com/golang-migrate/migrate/v4/source/file"
 )
 
 func main() {
@@ -64,20 +64,23 @@ func handler(w http.ResponseWriter, r *http.Request){
 
     w.Write([]byte("testing driver "))
     dbDriver, err := mysql.WithInstance(db, &mysql.Config{})
+    if err != nil {
+        w.Write([]byte(err.Error()))
+        return
+    }
     w.Write([]byte("testing driver output"))
 
-    // if err != nil {
-    //     fmt.Errorf("error occured %v", err)
-    //     return
-    // }
-
-    // // m, _ := migrate.NewWithDatabaseInstance(
-    // //     "file:///migrations",
-    // //     "mysql", 
-    // //     driver,
-    // // )
+    m, err := migrate.NewWithDatabaseInstance(
+        "file:///migrations",
+        "mysql", 
+        dbDriver,
+    )
+    if err != nil {
+        w.Write([]byte(err.Error()))
+        return
+    }
     
-    // // m.Steps(2)
+    m.Steps(2)
     fmt.Println(dbDriver)
     w.WriteHeader(http.StatusOK)
     fmt.Fprintln(w, "database successfully connected")
