@@ -1,18 +1,18 @@
 package main
 
 import (
-    "fmt"
-    "log"
-    "net/http"
-    "os"
-    "database/sql"
-    
-    _ "github.com/go-sql-driver/mysql"
+	"database/sql"
+	"fmt"
+	"log"
+	"net/http"
+	"os"
+
+	_ "github.com/go-sql-driver/mysql"
     "github.com/golang-migrate/migrate/v4/database/mysql"
 )
 
 func main() {
-    fmt.Print("Starting server")
+    fmt.Print("Starting server ")
     http.HandleFunc("/", handler)
     port := os.Getenv("PORT")
     if port == "" {
@@ -51,7 +51,7 @@ func handler(w http.ResponseWriter, r *http.Request){
 
     host := "/cloudsql/pantheon-lighthouse-poc:us-central1:lighthousedb"
 
-    dbURI := fmt.Sprintf("%s:%s@unix(/%s)/%s?multiStatements=true", user, password, host, dbname)
+    dbURI := fmt.Sprintf("%s:%s@unix(/%s)/%s?multiStatements=true&parseTime=true", user, password, host, dbname)
 
     db, err := sql.Open("mysql", dbURI)
     if err != nil {
@@ -60,12 +60,13 @@ func handler(w http.ResponseWriter, r *http.Request){
         return
     }
 
-
-    // // db, _ := sql.Open("mysql", "user:password@tcp(host:port)/dbname?multiStatements=true")
-    _, err = mysql.WithInstance(db, &mysql.Config{})
+    w.Write([]byte("testing driver"))
+    // db, _ := sql.Open("mysql", "user:password@tcp(host:port)/dbname?multiStatements=true")
+    dbDriver, err := mysql.WithInstance(db, &mysql.Config{})
+    w.Write([]byte("testing driver output"))
 
     if err != nil {
-        http.Error(w, err.Error(), http.StatusInternalServerError)
+        fmt.Errorf("error occured %v", err)
         return
     }
 
@@ -76,6 +77,7 @@ func handler(w http.ResponseWriter, r *http.Request){
     // )
     
     // m.Steps(2)
+    fmt.Println(dbDriver)
     w.WriteHeader(http.StatusOK)
     fmt.Fprintln(w, "database successfully connected")
 }
