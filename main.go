@@ -129,6 +129,12 @@ func handler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+    rootCmd.AddCommand(migrateCmd)
+    // if err != nil {
+    //     w.WriteHeader(http.StatusInternalServerError)
+    //     log.Fatal(err)
+    // }
+
 	// createQuery := "CREATE TABLE test(user varchar(50))"
 
 	// createTable, err := db.Exec(createQuery)
