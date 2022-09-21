@@ -8,7 +8,7 @@ import (
 	"os"
 
 	_ "github.com/go-sql-driver/mysql"
-    _ "github.com/golang-migrate/migrate/v4/database/mysql"
+    // _ "github.com/golang-migrate/migrate/v4/database/mysql"
 )
 
 func main() {
@@ -60,7 +60,7 @@ func handler(w http.ResponseWriter, r *http.Request){
         return
     }
 
-    // w.Write([]byte("testing driver"))
+    w.Write([]byte("testing driver"))
     // // db, _ := sql.Open("mysql", "user:password@tcp(host:port)/dbname?multiStatements=true")
     // dbDriver, err := mysql.WithInstance(db, &mysql.Config{})
     // w.Write([]byte("testing driver output"))
