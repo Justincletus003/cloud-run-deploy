@@ -39,8 +39,7 @@ func handler(w http.ResponseWriter, r *http.Request){
     fmt.Println("testing build")
 
     if err == "" {
-        w.WriteHeader(http.StatusInternalServerError)
-        return
+        err = "test"
     }
 
 
