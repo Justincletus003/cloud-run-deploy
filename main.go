@@ -70,7 +70,7 @@ func handler(w http.ResponseWriter, r *http.Request){
 
     createQuery := "CREATE TABLE test(user varchar(50))"
 
-    createTable, err := db.Exec(createQuery, nil)
+    createTable, err := db.Exec(createQuery)
     if err != nil {
         w.Write([]byte(err.Error()))
         return
