@@ -8,6 +8,7 @@ import (
     "database/sql"
     
     _ "github.com/go-sql-driver/mysql"
+    "github.com/golang-migrate/migrate/v4/database/mysql"
 )
 
 func main() {
