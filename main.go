@@ -38,10 +38,8 @@ func handler(w http.ResponseWriter, r *http.Request){
     // _, err := sql.Open("mysql", dbURI)
 
     if err == "" {
-        err = "user is empty"
         w.WriteHeader(http.StatusInternalServerError)
-        log.Fatal(err)
-        w.Write([]byte(err))
+        return
     }
 
 
