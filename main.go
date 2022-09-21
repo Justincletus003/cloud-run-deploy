@@ -133,17 +133,20 @@ func handler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	m, err := migrate.NewWithDatabaseInstance(
-	    "file:///examples/migrations",
+	    "file:///home/examples/migrations",
 	    "mysql",
 	    dbDriver,
 	)
 	if err != nil {
         w.WriteHeader(http.StatusInternalServerError)
-        fmt.Errorf("migration is failed %v", err)
+        log.Fatal(err)
 	    w.Write([]byte(err.Error()))
 	    return
 	}
-	m.Steps(2)
+    if err := m.Up(); err != nil {
+        log.Fatal(err)
+    }
+	// m.Steps(2)
     fmt.Print("migration tested\n")
 	// fmt.Println(dbDriver)
 	w.WriteHeader(http.StatusOK)
