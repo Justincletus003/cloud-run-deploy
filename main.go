@@ -133,7 +133,7 @@ func handler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	m, err := migrate.NewWithDatabaseInstance(
-	    "file:///home/examples/migrations",
+	    "file:///migration",
 	    "mysql",
 	    dbDriver,
 	)
