@@ -133,18 +133,21 @@ func handler(w http.ResponseWriter, r *http.Request) {
 	}
     d, err := iofs.New(fs, "db/migration/")
     if err != nil {
+        fmt.Printf("start\n")
         log.Fatal(err)
+        fmt.Printf("end\n")
     }
     log.Printf("%v", d)
 
 	m, err := migrate.NewWithDatabaseInstance(
-	    "file:///migration",
+	    "file://./db/migration",
 	    "mysql",
 	    dbDriver,
 	)
 	if err != nil {
         w.WriteHeader(http.StatusInternalServerError)
         log.Fatal(err)
+        fmt.Printf("\n")
 	    w.Write([]byte(err.Error()))
 	    return
 	}
