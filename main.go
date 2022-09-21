@@ -10,7 +10,7 @@ import (
 
 	_ "github.com/go-sql-driver/mysql"
 	migrate "github.com/golang-migrate/migrate/v4"
-	// _ "github.com/golang-migrate/migrate/v4/database/mysql"
+	_ "github.com/golang-migrate/migrate/v4/database/mysql"
 	"github.com/golang-migrate/migrate/v4/source/iofs"
 	"github.com/spf13/cobra"
 )
@@ -33,6 +33,7 @@ var migrateCmd = &cobra.Command{
 	Short: "Run database migration",
 
 	Run: func(cmd *cobra.Command, args []string) {
+        fmt.Println("testing migration open")
 		user := os.Getenv("user")
 		if user == "" {
 			fmt.Errorf("user is not empty")
@@ -66,7 +67,7 @@ var migrateCmd = &cobra.Command{
 			panic(fmt.Sprintf("unable to connect database %v", err))
 		}
 		m.Up()
-
+        fmt.Println("testing migration finish")
 	},
 }
 
