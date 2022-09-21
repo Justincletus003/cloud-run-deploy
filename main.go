@@ -53,7 +53,7 @@ func handler(w http.ResponseWriter, r *http.Request){
 
     dbURI := fmt.Sprintf("%s:%s@unix(/%s)/%s?multiStatements=true&parseTime=true", user, password, host, dbname)
 
-    db, err := sql.Open("mysql", dbURI)
+    _, err := sql.Open("mysql", dbURI)
     if err != nil {
         w.WriteHeader(http.StatusInternalServerError)
         w.Write([]byte(err.Error()))
@@ -61,23 +61,23 @@ func handler(w http.ResponseWriter, r *http.Request){
     }
 
     w.Write([]byte("testing driver"))
-    // db, _ := sql.Open("mysql", "user:password@tcp(host:port)/dbname?multiStatements=true")
-    dbDriver, err := mysql.WithInstance(db, &mysql.Config{})
-    w.Write([]byte("testing driver output"))
+    // // db, _ := sql.Open("mysql", "user:password@tcp(host:port)/dbname?multiStatements=true")
+    // dbDriver, err := mysql.WithInstance(db, &mysql.Config{})
+    // w.Write([]byte("testing driver output"))
 
-    if err != nil {
-        fmt.Errorf("error occured %v", err)
-        return
-    }
+    // if err != nil {
+    //     fmt.Errorf("error occured %v", err)
+    //     return
+    // }
 
-    // m, _ := migrate.NewWithDatabaseInstance(
-    //     "file:///migrations",
-    //     "mysql", 
-    //     driver,
-    // )
+    // // m, _ := migrate.NewWithDatabaseInstance(
+    // //     "file:///migrations",
+    // //     "mysql", 
+    // //     driver,
+    // // )
     
-    // m.Steps(2)
-    fmt.Println(dbDriver)
+    // // m.Steps(2)
+    // fmt.Println(dbDriver)
     w.WriteHeader(http.StatusOK)
     fmt.Fprintln(w, "database successfully connected")
 }
