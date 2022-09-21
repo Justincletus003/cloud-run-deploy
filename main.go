@@ -133,12 +133,13 @@ func handler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	m, err := migrate.NewWithDatabaseInstance(
-	    "file:///migrations",
+	    "file:///examples/migrations",
 	    "mysql",
 	    dbDriver,
 	)
 	if err != nil {
         w.WriteHeader(http.StatusInternalServerError)
+        fmt.Errorf("migration is failed %v", err)
 	    w.Write([]byte(err.Error()))
 	    return
 	}
