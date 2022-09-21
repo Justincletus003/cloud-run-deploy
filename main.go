@@ -39,6 +39,7 @@ var migrateCmd = &cobra.Command{
 			fmt.Errorf("user is not empty")
 			return
 		}
+        fmt.Printf("%v", user)
 
 		password := os.Getenv("password")
 		if password == "" {
@@ -72,9 +73,9 @@ var migrateCmd = &cobra.Command{
 }
 
 func init() {
-    fmt.Printf("start init func")
+    fmt.Printf("start init func\n")
 	rootCmd.AddCommand(migrateCmd)
-    fmt.Printf("end init function")
+    fmt.Printf("end init function\n")
 }
 
 func main() {
