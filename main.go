@@ -53,7 +53,5 @@ func handler(w http.ResponseWriter, r *http.Request){
     
     // m.Steps(2)
     w.WriteHeader(http.StatusOK)
-    w.Write([]byte(err))
-
-    fmt.Fprintln(w, "database connected successfully")
+    fmt.Fprintln(w, err)
 }
