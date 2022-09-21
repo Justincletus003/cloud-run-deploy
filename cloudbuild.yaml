@@ -40,7 +40,7 @@ steps:
   # [START cloudbuild_go_deploy_yaml]
   # Deploy to Cloud Run
   - name: 'gcr.io/cloud-builders/gcloud'
-    args: ['run', 'deploy', 'cloud-run-deploy-${SHORT_SHA}', 
+    args: ['run', 'deploy', 'cloud-run-deploy', 
            '--image=gcr.io/$PROJECT_ID/cloud-run-deploy:$SHORT_SHA', 
            '--region', 'us-central1', '--platform', 'managed']
   # [END cloudbuild_go_deploy_yaml]
