@@ -16,150 +16,149 @@ import (
 )
 
 var fs embed.FS
-type User struct{
-    ID int `gorm:"primaryKey,autoIncrement"`
-    Firstname string
-    Lastname string
+
+type User struct {
+	ID        int `gorm:"primaryKey,autoIncrement"`
+	Firstname string
+	Lastname  string
 }
 
 var rootCmd = &cobra.Command{
-    Use: "app",
-    Short: "this is go migrate example",
+	Use:   "app",
+	Short: "this is go migrate example",
 }
 
 var migrateCmd = &cobra.Command{
-    Use: "migrate",
-    Short: "Run database migration",
-    
-    Run: func(cmd *cobra.Command, args []string)  {
-        user := os.Getenv("user")
-        if user == "" {
-            fmt.Errorf("user is not empty")
-            return
-        }
+	Use:   "migrate",
+	Short: "Run database migration",
 
-        password := os.Getenv("password")
-        if password == "" {
-            fmt.Errorf("password is not empty")
-            return
-            
-        }
+	Run: func(cmd *cobra.Command, args []string) {
+		user := os.Getenv("user")
+		if user == "" {
+			fmt.Errorf("user is not empty")
+			return
+		}
 
-        dbname := os.Getenv("dbname")
-        if dbname == "" {
-            fmt.Errorf("dbname is not empty")
-            return
-        }       
+		password := os.Getenv("password")
+		if password == "" {
+			fmt.Errorf("password is not empty")
+			return
 
-        host := "/cloudsql/pantheon-lighthouse-poc:us-central1:lighthousedb"
+		}
 
-        dbURI := fmt.Sprintf("%s:%s@unix(/%s)/%s?parseTime=true", user, password, host, dbname)
+		dbname := os.Getenv("dbname")
+		if dbname == "" {
+			fmt.Errorf("dbname is not empty")
+			return
+		}
 
-        d, err := iofs.New(fs, "migrations")
-        if err != nil {
-            log.Fatal(err)
-        }
-        m, err := migrate.NewWithSourceInstance(
-            "iofs", d, dbURI)
-        if err != nil {
-            panic(fmt.Sprintf("unable to connect database %v", err))
-        }
-        m.Up()
-        
-    },
+		host := "/cloudsql/pantheon-lighthouse-poc:us-central1:lighthousedb"
+
+		dbURI := fmt.Sprintf("%s:%s@unix(/%s)/%s?parseTime=true", user, password, host, dbname)
+
+		d, err := iofs.New(fs, "migrations")
+		if err != nil {
+			log.Fatal(err)
+		}
+		m, err := migrate.NewWithSourceInstance(
+			"iofs", d, dbURI)
+		if err != nil {
+			panic(fmt.Sprintf("unable to connect database %v", err))
+		}
+		m.Up()
+
+	},
 }
 
-func init() {    
-    rootCmd.AddCommand(migrateCmd)
+func init() {
+	rootCmd.AddCommand(migrateCmd)
 }
-
 
 func main() {
-    fmt.Print("Starting server ")
-    http.HandleFunc("/", handler)
-    port := os.Getenv("PORT")
-    if port == "" {
-        port = "8080"
-    }
-    log.Printf("listening on port %s", port)
-    if err := http.ListenAndServe(":"+port, nil); err != nil {
-        log.Fatal(err) 
-    } 
-    
+	fmt.Print("Starting server ")
+	http.HandleFunc("/", handler)
+	port := os.Getenv("PORT")
+	if port == "" {
+		port = "8080"
+	}
+	log.Printf("listening on port %s", port)
+	if err := http.ListenAndServe(":"+port, nil); err != nil {
+		log.Fatal(err)
+	}
+
 }
 
-func handler(w http.ResponseWriter, r *http.Request){
-    
-    user := os.Getenv("user")
-    if user == "" {
-        w.WriteHeader(http.StatusInternalServerError)
-        fmt.Fprintln(w, "username is not empty")
-        return
-    }
+func handler(w http.ResponseWriter, r *http.Request) {
 
-    password := os.Getenv("password")
-    if user == "" {
-        w.WriteHeader(http.StatusInternalServerError)
-        fmt.Fprintln(w, "password is not empty")
-        return
-    }
+	user := os.Getenv("user")
+	if user == "" {
+		w.WriteHeader(http.StatusInternalServerError)
+		fmt.Fprintln(w, "username is not empty")
+		return
+	}
 
-    dbname := os.Getenv("dbname")
-    if user == "" {
-        w.WriteHeader(http.StatusInternalServerError)
-        fmt.Fprintln(w, "dbname is not empty")
-        return
-    }
-    
+	password := os.Getenv("password")
+	if user == "" {
+		w.WriteHeader(http.StatusInternalServerError)
+		fmt.Fprintln(w, "password is not empty")
+		return
+	}
 
-    host := "/cloudsql/pantheon-lighthouse-poc:us-central1:lighthousedb"
+	dbname := os.Getenv("dbname")
+	if user == "" {
+		w.WriteHeader(http.StatusInternalServerError)
+		fmt.Fprintln(w, "dbname is not empty")
+		return
+	}
 
-    dbURI := fmt.Sprintf("%s:%s@unix(/%s)/%s?parseTime=true&multiStatements=true", user, password, host, dbname)
+	host := "/cloudsql/pantheon-lighthouse-poc:us-central1:lighthousedb"
 
-    db, err := sql.Open("mysql", dbURI)
-    if err != nil {
-        w.WriteHeader(http.StatusInternalServerError)
-        w.Write([]byte(err.Error()))
-        return
-    }
+	dbURI := fmt.Sprintf("%s:%s@unix(/%s)/%s?parseTime=true&multiStatements=true", user, password, host, dbname)
 
-    res := db.Ping()
-    if res != nil {
-        w.Write([]byte(res.Error()))
-        return
-    }
+	db, err := sql.Open("mysql", dbURI)
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		w.Write([]byte(err.Error()))
+		return
+	}
 
-    // createQuery := "CREATE TABLE test(user varchar(50))"
+	res := db.Ping()
+	if res != nil {
+		w.Write([]byte(res.Error()))
+		return
+	}
 
-    // createTable, err := db.Exec(createQuery)
-    // if err != nil {
-    //     w.Write([]byte(err.Error()))
-    //     return
-    // }
-    // value, _ := createTable.RowsAffected()
-    // fmt.Fprintln(w, value)
-    // w.Write([]byte(strings.createTable.LastInsertId()))
+	// createQuery := "CREATE TABLE test(user varchar(50))"
 
-    // w.Write([]byte("testing driver "))
-    // dbDriver, err := mysql.WithInstance(db, &mysql.Config{})
-    // if err != nil {
-    //     w.Write([]byte(err.Error()))
-    //     return
-    // }
-    // // w.Write([]byte("testing driver output"))
+	// createTable, err := db.Exec(createQuery)
+	// if err != nil {
+	//     w.Write([]byte(err.Error()))
+	//     return
+	// }
+	// value, _ := createTable.RowsAffected()
+	// fmt.Fprintln(w, value)
+	// w.Write([]byte(strings.createTable.LastInsertId()))
 
-    // m, err := migrate.NewWithDatabaseInstance(
-    //     "file:///migrations",
-    //     "mysql", 
-    //     dbDriver,
-    // )
-    // if err != nil {
-    //     w.Write([]byte(err.Error()))
-    //     return
-    // }
-    
-    // m.Steps(2)
-    // fmt.Println(dbDriver)
-    w.WriteHeader(http.StatusOK)
-    fmt.Fprintln(w, "database successfully connected")
+	// w.Write([]byte("testing driver "))
+	// dbDriver, err := mysql.WithInstance(db, &mysql.Config{})
+	// if err != nil {
+	//     w.Write([]byte(err.Error()))
+	//     return
+	// }
+	// // w.Write([]byte("testing driver output"))
+
+	// m, err := migrate.NewWithDatabaseInstance(
+	//     "file:///migrations",
+	//     "mysql",
+	//     dbDriver,
+	// )
+	// if err != nil {
+	//     w.Write([]byte(err.Error()))
+	//     return
+	// }
+
+	// m.Steps(2)
+	// fmt.Println(dbDriver)
+	w.WriteHeader(http.StatusOK)
+	fmt.Fprintln(w, "database successfully connected")
 }
