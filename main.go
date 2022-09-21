@@ -68,6 +68,17 @@ func handler(w http.ResponseWriter, r *http.Request){
         return
     }
 
+    createQuery := "CREATE TABLE test(user varchar(50))"
+
+    createTable, err := db.Exec(createQuery, nil)
+    if err != nil {
+        w.Write([]byte(err.Error()))
+        return
+    }
+    value, _ := createTable.RowsAffected()
+    fmt.Fprintln(w, value)
+    // w.Write([]byte(strings.createTable.LastInsertId()))
+
     // w.Write([]byte("testing driver "))
     // dbDriver, err := mysql.WithInstance(db, &mysql.Config{})
     // if err != nil {
