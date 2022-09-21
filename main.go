@@ -62,6 +62,12 @@ func handler(w http.ResponseWriter, r *http.Request){
         return
     }
 
+    res := db.Ping()
+    if res != nil {
+        w.Write([]byte(res.Error()))
+        return
+    }
+
     w.Write([]byte("testing driver "))
     dbDriver, err := mysql.WithInstance(db, &mysql.Config{})
     if err != nil {
