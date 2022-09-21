@@ -7,10 +7,10 @@ import (
 	"net/http"
 	"os"
 
-	_ "github.com/go-sql-driver/mysql"
-    "github.com/golang-migrate/migrate/v4"
-    "github.com/golang-migrate/migrate/v4/database/mysql"
-    _ "github.com/golang-migrate/migrate/v4/source/file"
+	// _ "github.com/go-sql-driver/mysql"
+    // "github.com/golang-migrate/migrate/v4"
+    // "github.com/golang-migrate/migrate/v4/database/mysql"
+    // _ "github.com/golang-migrate/migrate/v4/source/file"
 )
 
 func main() {
@@ -23,7 +23,7 @@ func main() {
     log.Printf("listening on port %s", port)
     if err := http.ListenAndServe(":"+port, nil); err != nil {
         log.Fatal(err) 
-    }    
+    } 
     
 }
 
@@ -68,26 +68,26 @@ func handler(w http.ResponseWriter, r *http.Request){
         return
     }
 
-    w.Write([]byte("testing driver "))
-    dbDriver, err := mysql.WithInstance(db, &mysql.Config{})
-    if err != nil {
-        w.Write([]byte(err.Error()))
-        return
-    }
-    w.Write([]byte("testing driver output"))
+    // w.Write([]byte("testing driver "))
+    // dbDriver, err := mysql.WithInstance(db, &mysql.Config{})
+    // if err != nil {
+    //     w.Write([]byte(err.Error()))
+    //     return
+    // }
+    // w.Write([]byte("testing driver output"))
 
-    m, err := migrate.NewWithDatabaseInstance(
-        "file:///migrations",
-        "mysql", 
-        dbDriver,
-    )
-    if err != nil {
-        w.Write([]byte(err.Error()))
-        return
-    }
+    // m, err := migrate.NewWithDatabaseInstance(
+    //     "file:///migrations",
+    //     "mysql", 
+    //     dbDriver,
+    // )
+    // if err != nil {
+    //     w.Write([]byte(err.Error()))
+    //     return
+    // }
     
-    m.Steps(2)
-    fmt.Println(dbDriver)
+    // m.Steps(2)
+    // fmt.Println(dbDriver)
     w.WriteHeader(http.StatusOK)
     fmt.Fprintln(w, "database successfully connected")
 }
