@@ -4,7 +4,13 @@ import (
     "fmt"
     "log"
     "net/http"
-    "os"    
+    "os"
+    "database/sql"
+    
+    _ "github.com/go-sql-driver/mysql"
+    _ "github.com/golang-migrate/migrate/v4"
+    _ "github.com/golang-migrate/migrate/v4/database/mysql"
+    _ "github.com/golang-migrate/migrate/v4/source/file"
 )
 
 func main() {
@@ -23,17 +29,37 @@ func main() {
 
 func handler(w http.ResponseWriter, r *http.Request){
     
-    err := os.Getenv("user")
+    user := os.Getenv("user")
+    if user == "" {
+        w.WriteHeader(http.StatusInternalServerError)
+        fmt.Fprintln(w, "username is not empty")
+        return
+    }
 
-    // host := "/cloudsql/pantheon-lighthouse-poc:us-central1:lighthousedb"
+    password := os.Getenv("password")
+    if user == "" {
+        w.WriteHeader(http.StatusInternalServerError)
+        fmt.Fprintln(w, "password is not empty")
+        return
+    }
 
-    // dbURI := fmt.Sprintf("%s:%s@unix(/%s)/%s?parseTime=true&multiStatements=true", user, password, host, dbname)
+    dbname := os.Getenv("dbname")
+    if user == "" {
+        w.WriteHeader(http.StatusInternalServerError)
+        fmt.Fprintln(w, "dbname is not empty")
+        return
+    }
+    
 
-    // _, err := sql.Open("mysql", dbURI)
-    fmt.Println("testing build")
+    host := "/cloudsql/pantheon-lighthouse-poc:us-central1:lighthousedb"
 
-    if err == "" {
-        err = "test"
+    dbURI := fmt.Sprintf("%s:%s@unix(/%s)/%s?parseTime=true&multiStatements=true", user, password, host, dbname)
+
+    _, err := sql.Open("mysql", dbURI)
+    if err != nil {
+        w.WriteHeader(http.StatusInternalServerError)
+        w.Write([]byte(err.Error()))
+        return
     }
 
 
@@ -47,5 +73,5 @@ func handler(w http.ResponseWriter, r *http.Request){
     
     // m.Steps(2)
     w.WriteHeader(http.StatusOK)
-    fmt.Fprintln(w, err)
+    fmt.Fprintln(w, "database successfully connected")
 }
