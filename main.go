@@ -8,6 +8,7 @@ import (
     "database/sql"
     
     _ "github.com/go-sql-driver/mysql"
+    "github.com/golang-migrate/migrate/v4/database/mysql"
 )
 
 func main() {
@@ -52,7 +53,7 @@ func handler(w http.ResponseWriter, r *http.Request){
 
     dbURI := fmt.Sprintf("%s:%s@unix(/%s)/%s?parseTime=true&multiStatements=true", user, password, host, dbname)
 
-    _, err := sql.Open("mysql", dbURI)
+    db, err := sql.Open("mysql", dbURI)
     if err != nil {
         w.WriteHeader(http.StatusInternalServerError)
         w.Write([]byte(err.Error()))
@@ -61,7 +62,14 @@ func handler(w http.ResponseWriter, r *http.Request){
 
 
     // // db, _ := sql.Open("mysql", "user:password@tcp(host:port)/dbname?multiStatements=true")
-    // driver, _ := mysql.WithInstance(db, &mysql.Config{})
+    _, err = mysql.WithInstance(db, &mysql.Config{})
+
+    if err != nil {
+        w.WriteHeader(http.StatusInternalServerError)
+        w.Write([]byte(err.Error()))
+        return
+    }
+
     // m, _ := migrate.NewWithDatabaseInstance(
     //     "file:///migrations",
     //     "mysql", 
