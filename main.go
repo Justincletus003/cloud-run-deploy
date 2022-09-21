@@ -72,7 +72,9 @@ var migrateCmd = &cobra.Command{
 }
 
 func init() {
+    fmt.Printf("start init func")
 	rootCmd.AddCommand(migrateCmd)
+    fmt.Printf("end init function")
 }
 
 func main() {
