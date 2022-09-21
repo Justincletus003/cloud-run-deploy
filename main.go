@@ -4,13 +4,7 @@ import (
     "fmt"
     "log"
     "net/http"
-    "os"
-    _ "database/sql"
-    
-    _ "github.com/go-sql-driver/mysql"
-    _ "github.com/golang-migrate/migrate/v4"
-    _ "github.com/golang-migrate/migrate/v4/database/mysql"
-    _ "github.com/golang-migrate/migrate/v4/source/file"
+    "os"    
 )
 
 func main() {
