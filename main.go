@@ -65,8 +65,7 @@ func handler(w http.ResponseWriter, r *http.Request){
     _, err = mysql.WithInstance(db, &mysql.Config{})
 
     if err != nil {
-        w.WriteHeader(http.StatusInternalServerError)
-        w.Write([]byte(err.Error()))
+        http.Error(w, err.Error(), http.StatusInternalServerError)
         return
     }
 
