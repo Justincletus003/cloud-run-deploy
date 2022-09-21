@@ -8,6 +8,8 @@ import (
 	"os"
 
 	_ "github.com/go-sql-driver/mysql"
+    _ "github.com/golang-migrate/migrate/v4"
+    "github.com/golang-migrate/migrate/v4/database/mysql"
     // _ "github.com/golang-migrate/migrate/v4/database/mysql"
 )
 
@@ -53,17 +55,16 @@ func handler(w http.ResponseWriter, r *http.Request){
 
     dbURI := fmt.Sprintf("%s:%s@unix(/%s)/%s?multiStatements=true&parseTime=true", user, password, host, dbname)
 
-    _, err := sql.Open("mysql", dbURI)
+    db, err := sql.Open("mysql", dbURI)
     if err != nil {
         w.WriteHeader(http.StatusInternalServerError)
         w.Write([]byte(err.Error()))
         return
     }
 
-    w.Write([]byte("testing driver"))
-    // // db, _ := sql.Open("mysql", "user:password@tcp(host:port)/dbname?multiStatements=true")
-    // dbDriver, err := mysql.WithInstance(db, &mysql.Config{})
-    // w.Write([]byte("testing driver output"))
+    w.Write([]byte("testing driver "))
+    dbDriver, err := mysql.WithInstance(db, &mysql.Config{})
+    w.Write([]byte("testing driver output"))
 
     // if err != nil {
     //     fmt.Errorf("error occured %v", err)
@@ -77,7 +78,7 @@ func handler(w http.ResponseWriter, r *http.Request){
     // // )
     
     // // m.Steps(2)
-    // fmt.Println(dbDriver)
+    fmt.Println(dbDriver)
     w.WriteHeader(http.StatusOK)
     fmt.Fprintln(w, "database successfully connected")
 }
