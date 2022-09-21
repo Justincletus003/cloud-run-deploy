@@ -51,7 +51,7 @@ func handler(w http.ResponseWriter, r *http.Request){
 
     host := "/cloudsql/pantheon-lighthouse-poc:us-central1:lighthousedb"
 
-    dbURI := fmt.Sprintf("%s:%s@unix(/%s)/%s?parseTime=true&multiStatements=true", user, password, host, dbname)
+    dbURI := fmt.Sprintf("%s:%s@unix(/%s)/%s?multiStatements=true", user, password, host, dbname)
 
     db, err := sql.Open("mysql", dbURI)
     if err != nil {
