@@ -2,7 +2,7 @@ package main
 
 import (
 	"database/sql"
-	"embed"
+	_ "embed"
 	"fmt"
 	"log"
 	"net/http"
@@ -12,11 +12,11 @@ import (
     "github.com/golang-migrate/migrate/v4"
 	"github.com/golang-migrate/migrate/v4/database/mysql"
     _ "github.com/golang-migrate/migrate/v4/source/file"
-	"github.com/golang-migrate/migrate/v4/source/iofs"
+	_ "github.com/golang-migrate/migrate/v4/source/iofs"
 	_ "github.com/spf13/cobra"
 )
 
-var fs embed.FS
+// var fs embed.FS
 
 // type User struct {
 // 	ID        int `gorm:"primaryKey,autoIncrement"`
@@ -131,13 +131,13 @@ func handler(w http.ResponseWriter, r *http.Request) {
 	    w.Write([]byte(err.Error()))
 	    return
 	}
-    d, err := iofs.New(fs, "examples/migrations/")
-    if err != nil {
-        fmt.Printf("start\n")
-        log.Fatal(err)
-        fmt.Printf("end\n")
-    }
-    log.Printf("%v", d)
+    // d, err := iofs.New(fs, "examples/migrations/")
+    // if err != nil {
+    //     fmt.Printf("start\n")
+    //     log.Fatal(err)
+    //     fmt.Printf("end\n")
+    // }
+    // log.Printf("%v", d)
 
 	m, err := migrate.NewWithDatabaseInstance(
 	    "file://migration",
