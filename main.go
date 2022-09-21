@@ -131,16 +131,9 @@ func handler(w http.ResponseWriter, r *http.Request) {
 	    w.Write([]byte(err.Error()))
 	    return
 	}
-    // d, err := iofs.New(fs, "examples/migrations/")
-    // if err != nil {
-    //     fmt.Printf("start\n")
-    //     log.Fatal(err)
-    //     fmt.Printf("end\n")
-    // }
-    // log.Printf("%v", d)
 
 	m, err := migrate.NewWithDatabaseInstance(
-	    "file://migration",
+	    "file:///migrations",
 	    "mysql",
 	    dbDriver,
 	)
