@@ -23,7 +23,36 @@ steps:
         go install github.com/jstemmer/go-junit-report/v2@latest
         2>&1 go test -timeout 1m -v ./... | /go/bin/go-junit-report -set-exit-code -iocopy -out ${SHORT_SHA}_test_log.xml
   # [END cloudbuild_go_test_yaml]
-  
+  # [START cloudbuild_sql_proxy_layer]
+  # - id: "docker-layer"
+  - name: "gcr.io/cloud-builders/docker"
+    entrypoint: /bin/bash
+    args:
+      - '-c'
+      - |
+        echo "FROM gcr.io/cloudsql-docker/gce-proxy
+        COPY --from=gcr.io/cloudsql-docker/gce-proxy /cloud_sql_proxy /cloudsql/cloud_sql_proxy" > Dockerfile-proxy;
+        docker build -f Dockerfile-proxy -t db-proxy .
+  # [END cloudbuild_sql_proxy_layer]
+
+  # # [START cloudbuild_sql_proxy_socket]
+  # # For Unix Socket connections
+  # - name: "migrate-socket"
+  #   dir: sql-proxy
+  #   env:
+  #     - "DATABASE_NAME=${_DATABASE_NAME}"
+  #     - "DATABASE_USER=${_DATABASE_USER}"
+  #     - "INSTANCE_CONNECTION_NAME=${_INSTANCE_CONNECTION_NAME}"
+  #     - "DATABASE_TYPE=${_DATABASE_TYPE}"
+  #   secretEnv:
+  #     - DATABASE_PASS
+  #   entrypoint: /bin/bash
+  #   args:
+  #     - '-c'
+  #     - |
+  #       /cloudsql/cloud_sql_proxy -instances=${_INSTANCE_CONNECTION_NAME} -dir=/cloudsql & sleep 2;
+
+  # [END cloudbuild_sql_proxy_socket]
   # [START cloudbuild_go_image_yaml]
   # Docker Build
   - name: 'gcr.io/cloud-builders/docker'
