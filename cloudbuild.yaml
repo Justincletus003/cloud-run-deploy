@@ -37,7 +37,8 @@ steps:
 
   # [START cloudbuild_sql_proxy_socket]
   # For Unix Socket connections
-  - name: "migrate-socket"
+  - id: "migrate-socket"
+    name: db-proxy
     dir: sql-proxy
     env:
       - "DATABASE_NAME=${dbname}"
