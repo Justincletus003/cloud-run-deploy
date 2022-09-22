@@ -37,8 +37,7 @@ steps:
 
   # [START cloudbuild_sql_proxy_socket]
   # For Unix Socket connections
-  - id: "migrate-socket"
-    name: db-proxy
+  - name: "migrate-socket"
     dir: sql-proxy
     env:
       - "DATABASE_NAME=${dbname}"
@@ -51,7 +50,7 @@ steps:
     args:
       - '-c'
       - |
-        echo $(DATABASE_NAME)
+        echo $(instance_name)
       # /cloudsql/cloud_sql_proxy -instances=${instance_name} -dir=/cloudsql & sleep 2;
       # echo $(DATABASE_NAME)
   # [END cloudbuild_sql_proxy_socket]
