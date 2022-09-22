@@ -1,2 +1,2 @@
 #!/bin/bash
-echo ${DATABASE_PASS}
+export DB_PASS=${DATABASE_PASS}
