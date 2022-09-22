@@ -18,68 +18,6 @@ import (
 	_ "github.com/spf13/cobra"
 )
 
-// var fs embed.FS
-
-// type User struct {
-// 	ID        int `gorm:"primaryKey,autoIncrement"`
-// 	Firstname string
-// 	Lastname  string
-// }
-
-// var rootCmd = &cobra.Command{
-// 	Use:   "app",
-// 	Short: "this is go migrate example",
-// }
-
-// var migrateCmd = &cobra.Command{
-// 	Use:   "migrate",
-// 	Short: "Run database migration",
-
-// 	Run: func(cmd *cobra.Command, args []string) {
-//         fmt.Println("testing migration open")
-// 		user := os.Getenv("user")
-// 		if user == "" {
-// 			fmt.Errorf("user is not empty")
-// 			return
-// 		}
-//         fmt.Printf("%v", user)
-
-// 		password := os.Getenv("password")
-// 		if password == "" {
-// 			fmt.Errorf("password is not empty")
-// 			return
-
-// 		}
-
-// 		dbname := os.Getenv("dbname")
-// 		if dbname == "" {
-// 			fmt.Errorf("dbname is not empty")
-// 			return
-// 		}
-
-// 		host := "/cloudsql/pantheon-lighthouse-poc:us-central1:lighthousedb"
-
-// 		dbURI := fmt.Sprintf("%s:%s@unix(/%s)/%s?parseTime=true", user, password, host, dbname)
-
-// 		d, err := iofs.New(fs, "migrations")
-// 		if err != nil {
-// 			log.Fatal(err)
-// 		}
-// 		m, err := migrate.NewWithSourceInstance(
-// 			"iofs", d, dbURI)
-// 		if err != nil {
-// 			panic(fmt.Sprintf("unable to connect database %v", err))
-// 		}
-// 		m.Up()
-//         fmt.Println("testing migration finish")
-// 	},
-// }
-
-// func init() {
-//     fmt.Printf("start init func\n")
-// 	rootCmd.AddCommand(migrateCmd)
-//     fmt.Printf("end init function\n")
-// }
 
 var (
     _, b, _, _ = runtime.Caller(0)

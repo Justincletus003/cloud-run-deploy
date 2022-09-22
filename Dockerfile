@@ -11,7 +11,7 @@ RUN go mod download
 
 # Copy local code to the container image.
 COPY . ./
-COPY migrations /app
+
 # Build the binary.
 RUN go build -v -o server
 
