@@ -83,15 +83,23 @@ steps:
       - |
         /cloudsql/cloud_sql_proxy -instances=${_INSTANCE_CONNECTION_NAME} -dir=/cloudsql & sleep 2;
         ls -l
+        echo ${DATABASE_PASS}
   # [END cloudbuild_sql_proxy_socket]
   # [START cloudbuild_go_image_yaml]
   # Docker Build
   # - name: 'gcr.io/cloud-builders/docker'
+  #   dir: migrator
+  #   env:
+  #     - "DATABASE_NAME=${_DATABASE_NAME}"
+  #     - "DATABASE_USER=${_DATABASE_USER}"
+  #     - "INSTANCE_CONNECTION_NAME=${_INSTANCE_CONNECTION_NAME}"
+  #     - "DATABASE_TYPE=${_DATABASE_TYPE}"
+  #   secretEnv:
+  #     - DATABASE_PASS
   #   args:
   #     - '-c'
   #     - |
-  #       ls -l
-  #     #docker run  --network host migrator -path=/migrations/ -database "mysql://docker:docker@localhost:7557/test_db?sslmode=disable" up
+  #       docker run  --network host migrator -path=/migrations/ -database "mysql://docker:docker@localhost:7557/test_db?sslmode=disable" up
   
   # [END cloudbuild_go_image_yaml]
 
