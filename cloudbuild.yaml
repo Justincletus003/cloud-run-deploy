@@ -50,8 +50,9 @@ steps:
     args:
       - '-c'
       - |
-        /cloudsql/cloud_sql_proxy -instances=${instance_name} -dir=/cloudsql & sleep 2;
         echo $(DATABASE_NAME)
+      # /cloudsql/cloud_sql_proxy -instances=${instance_name} -dir=/cloudsql & sleep 2;
+      # echo $(DATABASE_NAME)
   # [END cloudbuild_sql_proxy_socket]
 
   # [START cloudbuild_go_image_yaml]
