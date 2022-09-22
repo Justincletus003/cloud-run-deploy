@@ -22,10 +22,11 @@ steps:
       - |
         go install github.com/jstemmer/go-junit-report/v2@latest
         2>&1 go test -timeout 1m -v ./... | /go/bin/go-junit-report -set-exit-code -iocopy -out ${SHORT_SHA}_test_log.xml
-        curl -L https://packagecloud.io/golang-migrate/migrate/gpgkey | apt-key add -
-        echo "deb https://packagecloud.io/golang-migrate/migrate/ubuntu/ $(lsb_release -sc) main" > /etc/apt/sources.list.d/migrate.list
-        apt-get update
-        apt-get install -y migrate
+        go get -u -d github.com/golang-migrate/migrate/cmd/migrate
+        cd $GOPATH/src/github.com/golang-migrate/migrate/cmd/migrate
+        export $TAG="v4.15.2"
+        git checkout $TAG
+        go install -tags 'mysql' github.com/golang-migrate/migrate/v4/cmd/migrate@$TAG
         migrate --version
   # [END cloudbuild_go_test_yaml]
   
