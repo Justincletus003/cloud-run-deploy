@@ -31,7 +31,7 @@ steps:
     name: gcr.io/cloud-builders/wget
     entrypoint: bash
     args:
-      - -c
+      - '-c'
       - wget -O /sql-proxy/cloud_sql_proxy https://storage.googleapis.com/cloudsql-proxy/v1.15/cloud_sql_proxy.linux.386 && chmod +x /sql-proxy/cloud_sql_proxy
     waitFor: ['-']
 
@@ -46,10 +46,10 @@ steps:
     secretEnv:
       - DATABASE_PASS
     args:
-      - -c
+      - '-c'
       - |
-        /sql-proxy/cloud_sql_proxy -dir=/sql-proxy -instances=${INSTANCE_CONNECTION_NAME} & sleep 2
-        
+        /sql-proxy/cloud_sql_proxy -dir=/sql-proxy -instances=${_INSTANCE_CONNECTION_NAME} & sleep 2
+
       # && \
       # docker run -v /migrator:/root \
       # --env DATABASE_HOST=/root/${INSTANCE_CONNECTION_NAME} \
