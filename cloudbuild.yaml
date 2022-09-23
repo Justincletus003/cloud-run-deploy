@@ -51,12 +51,9 @@ steps:
       - CRED_FILE
     args:
       - '-c'
-      - |        
-        pwd
-        ls -l
+      - |
         bash workspace/env.sh
-        ls -l
-      # /workspace/cloud_sql_proxy -dir=/workspace -instances=${_INSTANCE_CONNECTION_NAME} -credential_file=${CRED_FILE} & sleep 2    
+        /workspace/cloud_sql_proxy -dir=/workspace -instances=${_INSTANCE_CONNECTION_NAME} -credential_file=cloud-sa.json & sleep 2
 
       # && \
       # docker run -v /migrator:/root \
