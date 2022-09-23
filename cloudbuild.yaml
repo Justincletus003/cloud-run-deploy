@@ -41,7 +41,6 @@ steps:
   - id: migrate
     name: gcr.io/cloud-builders/docker
     entrypoint: /bin/bash
-    dir: workspace
     env:
       - "DATABASE_NAME=${_DATABASE_NAME}"
       - "DATABASE_USER=${_DATABASE_USER}"
