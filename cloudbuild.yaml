@@ -28,7 +28,7 @@ steps:
   #   waitFor: ['-']
   - id: "build"
     name: "gcr.io/cloud-builders/docker"
-    args: ["build", "-t", "${_IMAGE_NAME}", "workspace/."]
+    args: ["build", "-t", "${_IMAGE_NAME}", "/workspace/."]
 
   - id: install-proxy
     name: gcr.io/cloud-builders/wget
