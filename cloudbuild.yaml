@@ -55,7 +55,7 @@ steps:
         bash workspace/env.sh
         db_pass=$(cat DB_PASS)       
         /workspace/cloud_sql_proxy -dir=/workspace -instances=${_INSTANCE_CONNECTION_NAME}=tcp:3306 -credential_file=cloud-sa.json & sleep 2 && \
-        docker run --network host migrate/migrate -path=migrator/migrations/ -database "mysql://${_DATABASE_USER}:${db_pass}@tcp(127.0.0.1:3306)/test_db"
+        docker run --network host migrate/migrate -path=migrator/migrations/ -database "mysql://${_DATABASE_USER}:${db_pass}@tcp(127.0.0.1:3306)/test_db" -help
         
       # docker run -v migrator/migrations --network host migrate/migrate -path=migrator/migrations -database "${_DATABASE_USER}:${db_pass}@tcp(127.0.0.1:3306)/test_db?sslmode=disable"
       
