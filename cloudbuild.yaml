@@ -54,30 +54,8 @@ steps:
       - |
         bash workspace/env.sh
         db_pass=$(cat DB_PASS)       
-        /workspace/cloud_sql_proxy -dir=/workspace -instances=${_INSTANCE_CONNECTION_NAME}=tcp:127.0.0.1:3306 -credential_file=cloud-sa.json & sleep 2 && \
-        docker run -v migrator/migrations --name="host" -p 3306:3306 migrate/migrate -path=migrator/migrations -database "mysql://${_DATABASE_USER}:${db_pass}@(localhost:3306)/test_db?sslmode=disable" up
-
-      # docker run -v migrator/migrations --network="host" boxfuse/flyway "flyway -url=jdbc:mysql://127.0.0.1:3306/test_db -user=${_DATABASE_USER} -password=${db_pass} -connectRetries=60 -schemas=test_db -validateOnMigrate=false"
-
-      # docker run -v migrator/migrations --network host migrate/migrate -path=migrator/migrations -database "mysql://${_DATABASE_USER}:${db_pass}@tcp(127.0.0.1:3306)/test_db" up
-      #docker run --network host flyway/flyway "flyway -url=jdbc:mysql://127.0.0.1:3306/test_db -user=${_DATABASE_USER} -password=${db_pass} -connectRetries=60 -schemas=test_db -validateOnMigrate=false"
-
-      # docker run -v migrator/migrations --network host migrate/migrate -path=migrator/migrations/ -database "mysql://${_DATABASE_USER}:${db_pass}@unix(/workspace/${_INSTANCE_CONNECTION_NAME})/test_db" version
-        
-      # docker run -v migrator/migrations --network host migrate/migrate -path=migrator/migrations -database "${_DATABASE_USER}:${db_pass}@tcp(127.0.0.1:3306)/test_db?sslmode=disable"
-      
-      # docker run --rm -it --net=host mysql/mysql-server mysql -h 127.0.0.1 -P 3306 -u ${_DATABASE_USER} -p${db_pass}
-      # docker run -v migrator/migrations --network host flyway/flyway -path=migrator/migrations "flyway -url=jdbc:mysql://127.0.0.1:3306/test_db -user=${_DATABASE_USER} -password=${db_pass} -connectRetries=60 -schemas=test_db -validateOnMigrate=false"
-      # docker run -v migrator/migrations --network host migrate/migrate -path=migrator/migrations -database "mysql://127.0.0.1:3306/test_db?sslmode=disable -u ${_DATABASE_USER} -p ${db_pass}"
-      # @tcp()/" up        
-      # docker run -v migrator/migrations --network host migrate/migrate -path=migrator/migrations -database "mysql -u ${_DATABASE_USER} -h 127.0.0.1 -P 3306 --protocol=tcp test_db -p ${db_pass}"      
-      # docker run -v migrator/migrations --network host migrate/migrate -path=migrator/migrations -database "mysql://${_DATABASE_USER}:${db_pass}@tcp(127.0.0.1:3306)/test_db?sslmode=disable" up
-
-      # && \
-      # docker run -v /migrator:/root \
-      # --env DATABASE_HOST=/root/${INSTANCE_CONNECTION_NAME} \
-      # # Pass other necessary env variables like db username/password, etc.
-      # $_IMAGE_URL:$COMMIT_SHA
+        /workspace/cloud_sql_proxy -dir=/workspace -instances=${_INSTANCE_CONNECTION_NAME}=tcp:3306 -credential_file=cloud-sa.json & sleep 2 && \
+        docker run -v migrator/migrations --network "host" -p 3306:3306 migrate/migrate -path=migrator/migrations -database "mysql://${_DATABASE_USER}:${db_pass}@tcp(127.0.0.1:3306)/test_db?sslmode=disable" up      
     timeout: '1200s'
     waitFor: [build, install-proxy]
 
