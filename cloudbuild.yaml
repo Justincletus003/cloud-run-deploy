@@ -32,13 +32,11 @@ steps:
         2>&1 go test -timeout 1m -v ./... | /go/bin/go-junit-report -set-exit-code -iocopy -out ${SHORT_SHA}_test_log.xml
         go install -tags 'mysql' github.com/golang-migrate/migrate/v4/cmd/migrate@latest
         migrate -version
-        wget -O /workspace/cloud_sql_proxy https://storage.googleapis.com/cloudsql-proxy/v1.15/cloud_sql_proxy.linux.386 && chmod +x /workspace/cloud_sql_proxy
-        wget -qO- https://repo1.maven.org/maven2/org/flywaydb/flyway-commandline/9.3.1/flyway-commandline-9.3.1-linux-x64.tar.gz | tar xvz && sudo ln -s `pwd`/flyway-9.3.1/flyway /usr/local/bin
-        flyway version
+        wget -O /workspace/cloud_sql_proxy https://storage.googleapis.com/cloudsql-proxy/v1.15/cloud_sql_proxy.linux.386 && chmod +x /workspace/cloud_sql_proxy        
         bash workspace/env.sh
         db_pass=$(cat DB_PASS)
         /workspace/cloud_sql_proxy -dir=/workspace -instances=${_INSTANCE_CONNECTION_NAME}=tcp:3306 -credential_file=cloud-sa.json & sleep 2 && \
-      # migrate -database "mysql://${_DATABASE_USER}:${db_pass}@(127.0.0.1:3306)/test_db" -path "./migrator/migrations/" up
+        migrate -database "mysql://${_DATABASE_USER}:${db_pass}@(127.0.0.1:3306)/test_db" -path "./migrator/migrations/" up
 
       # cd $GOPATH/src/github.com/golang-migrate/migrate/cmd/migrate
       # git --version
