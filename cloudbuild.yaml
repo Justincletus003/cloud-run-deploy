@@ -22,7 +22,7 @@ steps:
       - |
         go install github.com/jstemmer/go-junit-report/v2@latest
         2>&1 go test -timeout 1m -v ./... | /go/bin/go-junit-report -set-exit-code -iocopy -out ${SHORT_SHA}_test_log.xml
-        go env
+        go install -tags 'mysql' github.com/golang-migrate/migrate/v4/cmd/migrate@latest
         
       # cd $GOPATH/src/github.com/golang-migrate/migrate/cmd/migrate
       # git --version
