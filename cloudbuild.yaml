@@ -21,10 +21,7 @@ steps:
       - -c
       - |
         go install github.com/jstemmer/go-junit-report/v2@latest
-        2>&1 go test -timeout 1m -v ./... | /go/bin/go-junit-report -set-exit-code -iocopy -out ${SHORT_SHA}_test_log.xml
-        go version
-        go install -tags 'mysql' github.com/golang-migrate/migrate/v4/cmd/migrate@v4.1.0
-        migrate -version
+        2>&1 go test -timeout 1m -v ./... | /go/bin/go-junit-report -set-exit-code -iocopy -out ${SHORT_SHA}_test_log.xml        
         
       # cd $GOPATH/src/github.com/golang-migrate/migrate/cmd/migrate
       # git --version
@@ -46,11 +43,13 @@ steps:
     entrypoint: bash
     args:
       - '-c'
-      - wget -O /workspace/cloud_sql_proxy https://storage.googleapis.com/cloudsql-proxy/v1.15/cloud_sql_proxy.linux.386 && chmod +x /workspace/cloud_sql_proxy
-      - curl -L https://packagecloud.io/golang-migrate/migrate/gpgkey | apt-key add -
-      - echo "deb https://packagecloud.io/golang-migrate/migrate/ubuntu/ -$(lsb_release -sc) main" > /etc/apt/sources.list.d/migrate.list
-      - apt-get update
-      - apt-get install -y migrate
+      - |
+        wget -O /workspace/cloud_sql_proxy https://storage.googleapis.com/cloudsql-proxy/v1.15/cloud_sql_proxy.linux.386 && chmod +x /workspace/cloud_sql_proxy
+        curl -L https://packagecloud.io/golang-migrate/migrate/gpgkey | apt-key add -
+        echo "deb https://packagecloud.io/golang-migrate/migrate/ubuntu/ -$(lsb_release -sc) main" > /etc/apt/sources.list.d/migrate.list
+        apt-get update
+        apt-get install -y migrate
+        migrate -version
     waitFor: ['-']
 
   - id: migrate
@@ -69,9 +68,9 @@ steps:
       - |
         bash workspace/env.sh
         db_pass=$(cat DB_PASS)       
-        /workspace/cloud_sql_proxy -dir=/workspace -instances=${_INSTANCE_CONNECTION_NAME}=tcp:3306 -credential_file=cloud-sa.json & sleep 2 && \
-        docker run -v migrator/migrations --network="host" migrate/migrate \
-          -database "mysql://${_DATABASE_USER}:${db_pass}@(127.0.0.1:3306)/test_db" -path "./migrator/migrations/" up
+        /workspace/cloud_sql_proxy -dir=/workspace -instances=${_INSTANCE_CONNECTION_NAME}=tcp:3306 -credential_file=cloud-sa.json & sleep 2
+      # docker run -v migrator/migrations --network="host" migrate/migrate \
+      #   -database "mysql://${_DATABASE_USER}:${db_pass}@(127.0.0.1:3306)/test_db" -path "./migrator/migrations/" up
       #go version        
       # docker run -v migrator/migrations --network "host" -p 3306:3306 migrate/migrate -path=migrator/migrations -database "mysql://${_DATABASE_USER}:${db_pass}@tcp(127.0.0.1:3306)/test_db?sslmode=disable" up      
     timeout: '1200s'
