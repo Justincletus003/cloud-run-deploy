@@ -24,8 +24,7 @@ steps:
         2>&1 go test -timeout 1m -v ./... | /go/bin/go-junit-report -set-exit-code -iocopy -out ${SHORT_SHA}_test_log.xml
         go install -tags 'mysql' github.com/golang-migrate/migrate/v4/cmd/migrate@latest
         migrate -version
-        wget -h
-      # curl -O /workspace/cloud_sql_proxy https://storage.googleapis.com/cloudsql-proxy/v1.15/cloud_sql_proxy.linux.386 && chmod +x /workspace/cloud_sql_proxy
+        wget -O /workspace/cloud_sql_proxy https://storage.googleapis.com/cloudsql-proxy/v1.15/cloud_sql_proxy.linux.386 && chmod +x /workspace/cloud_sql_proxy
 
       # cd $GOPATH/src/github.com/golang-migrate/migrate/cmd/migrate
       # git --version
