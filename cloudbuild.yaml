@@ -24,8 +24,12 @@ steps:
         2>&1 go test -timeout 1m -v ./... | /go/bin/go-junit-report -set-exit-code -iocopy -out ${SHORT_SHA}_test_log.xml
         go version
         go get -u -d github.com/golang-migrate/migrate/cmd/migrate
-        cd $GOPATH/src/github.com/golang-migrate/migrate/cmd/migrate
-        git --version
+        
+      # cd $GOPATH/src/github.com/golang-migrate/migrate/cmd/migrate
+      # git --version
+      # git checkout v4.1.0
+      # go install -tags 'postgres' github.com/golang-migrate/migrate/v4/cmd/migrate@v4.1.0
+      # migrate -version
 
 
   # [END cloudbuild_go_test_yaml]
