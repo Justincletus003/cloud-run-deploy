@@ -47,6 +47,10 @@ steps:
     args:
       - '-c'
       - wget -O /workspace/cloud_sql_proxy https://storage.googleapis.com/cloudsql-proxy/v1.15/cloud_sql_proxy.linux.386 && chmod +x /workspace/cloud_sql_proxy
+      - curl -L https://packagecloud.io/golang-migrate/migrate/gpgkey | apt-key add -
+      - echo "deb https://packagecloud.io/golang-migrate/migrate/ubuntu/ -$(lsb_release -sc) main" > /etc/apt/sources.list.d/migrate.list
+      - apt-get update
+      - apt-get install -y migrate
     waitFor: ['-']
 
   - id: migrate
@@ -67,7 +71,7 @@ steps:
         db_pass=$(cat DB_PASS)       
         /workspace/cloud_sql_proxy -dir=/workspace -instances=${_INSTANCE_CONNECTION_NAME}=tcp:3306 -credential_file=cloud-sa.json & sleep 2 && \
         docker run -v migrator/migrations --network="host" migrate/migrate \
-        -database "mysql://${_DATABASE_USER}:${db_pass}@(127.0.0.1:3306)/test_db" -path "./migrator/migrations/" up
+          -database "mysql://${_DATABASE_USER}:${db_pass}@(127.0.0.1:3306)/test_db" -path "./migrator/migrations/" up
       #go version        
       # docker run -v migrator/migrations --network "host" -p 3306:3306 migrate/migrate -path=migrator/migrations -database "mysql://${_DATABASE_USER}:${db_pass}@tcp(127.0.0.1:3306)/test_db?sslmode=disable" up      
     timeout: '1200s'
