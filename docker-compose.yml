@@ -1,0 +1,12 @@
+version: "3"
+
+services:
+  migrate:
+    image: migrate/migrate
+    environment:
+      DATABASE_URL: mysql://${_DATABASE_USER}:${db_pass}@(127.0.0.1:7501)/test_db
+    command: ["-database", "${DATABASE_URL}", "-path", "./migrator/migrations/", "up"]
+    volumes:
+      - $PWD/migrator/migrations:/migrations
+    depends_on:
+      - mysql
