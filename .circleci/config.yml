@@ -15,59 +15,7 @@ commands:
           echo ${cideployer} > ${HOME}/gcloud-service-key.json
           gcloud auth activate-service-account --key-file=${HOME}/gcloud-service-key.json
           gcloud --quiet config set project ${GOOGLE_PROJECT_ID}
-          envsubst < test.yml
-             
-          cat test.yml
-  
-  # deploy_to_prod:
-  #   docker:
-  #     - image: google/cloud-sdk
-  #   working_directory: ~/project
-  #   environment:
-  #     PROJECT_NAME: "buildhook-service-sbx"
-  #     GOOGLE_PROJECT_ID: "pantheon-buildhook"
-  #     FUNCTION_NAME: "buildhook-service-sbx"
-  #     ENTRYPOINT: BuildhookEntry
-  #     BUCKNAME: "buildhook-service"
-  #   steps:
-  #     - checkout
-  #     - set_project
-  #     - run:
-  #         name: Authorize GCloud Command Line Tool
-  #         command: |
-  #           echo ${cideployer} > ${HOME}/gcloud-service-key.json
-  #           gcloud auth activate-service-account --key-file=${HOME}/gcloud-service-key.json
-  #     - run:
-  #        name: Install libzip-dev
-  #        command: |
-  #         apt-get install -y libzip-dev
-  #         apt-get install -y zip
-  #     - run:
-  #        name: Creating function zip file
-  #        command: |
-  #         cd functions/restful
-  #         go mod vendor
-  #         zip --filesync -r9 ${PROJECT_NAME}.zip .
-  #     - run:
-  #        name: Upload zip file to GCS
-  #        command: |
-  #         gsutil cp ${PROJECT_NAME}.zip gs://${BUCKNAME}/${PROJECT_NAME}.zip
-  #         rm -rf ${PROJECT_NAME}.zip
-      
-  #     - run:
-  #         name: Deploy To Google Cloud Functions
-  #         command: |
-  #           gcloud functions deploy "${FUNCTION_NAME}" \
-  #             --runtime=go116 \
-  #             --region=us-central1 \
-  #             --source="gs://${BUCKNAME}/${PROJECT_NAME}.zip" \
-  #             --set-secrets="/functions/config:/go-buildhook-service.restful.json=buildhook-service-dev:latest" \
-  #             --entry-point="${ENTRYPOINT}" \
-  #             --trigger-http \
-  #             --project "${GOOGLE_PROJECT_ID}" \
-  #             --ingress-settings internal-and-gclb \
-  #             --security-level=secure-always \
-  #             --allow-unauthenticated
+          envsubst < 
   
 
 jobs:
@@ -80,7 +28,7 @@ jobs:
       PROJECT_NAME: "db-migration-dev"
       GOOGLE_PROJECT_ID: "pantheon-buildhook"
       GOOGLE_COMPUTE_REGION: "us-central1"
-      ENV_NAME: "HELLO"
+      ENV_NAME: "dev"
     steps:
       - checkout
       - set_project
@@ -97,10 +45,7 @@ jobs:
       - set_project
       - run:
           command: |
-            gcloud config get-value project   
-            export ENV_NAME="TEST"
-            envsubst < test.yml       
-            cat test.yml
+            gcloud config get-value project
 
 workflows:
   version: 2
