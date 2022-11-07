@@ -1,4 +1,11 @@
 version: 2.1
+executors:
+  go-build:
+    docker:
+      - image: quay.io/getpantheon/go-build:latest
+        auth:
+          username: $QUAY_USER
+          password: $QUAY_PASSWD
 commands:  
   set_project:
     description: Command to set project
