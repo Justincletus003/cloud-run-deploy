@@ -1,6 +1,6 @@
 #!/bin/bash
 
-if [ $ENV_PASS="prod" ]
+if [ ${_ENV_NAME}="prod" ]
 then
     echo "prod env";
 else
