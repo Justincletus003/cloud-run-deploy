@@ -1,6 +1,7 @@
 #!/bin/bash
 
-if [ $ENV_PASS="prod" ]; then
+if [ $ENV_PASS="prod" ]
+then
     echo "prod env";
 else
     echo "dev";

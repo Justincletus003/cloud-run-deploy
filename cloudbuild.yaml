@@ -21,7 +21,7 @@ steps:
       - "DATABASE_USER=${_DATABASE_USER}"
       - "INSTANCE_CONNECTION_NAME=${_INSTANCE_CONNECTION_NAME}"
       - "DATABASE_TYPE=${_DATABASE_TYPE}"
-      - "ENV_NAME=dev"
+      - ENV_NAME="dev"
     secretEnv:
       - DATABASE_PASS
       - CRED_FILE
