@@ -1,5 +1,10 @@
 version: 2.1
 commands:
+  install-binary:
+    steps:
+      - run: |
+          echo "hello world!"
+  
   set_project:
     description: Command to set project
     steps:
@@ -59,10 +64,6 @@ commands:
               --security-level=secure-always \
               --allow-unauthenticated
   
-  install-binary:
-    steps:
-      - run: |
-          echo "hello world!"
 
 jobs:
   build:
