@@ -21,7 +21,6 @@ steps:
       - "DATABASE_USER=${_DATABASE_USER}"
       - "INSTANCE_CONNECTION_NAME=${_INSTANCE_CONNECTION_NAME}"
       - "DATABASE_TYPE=${_DATABASE_TYPE}"
-      - ENV_NAME="dev"
     secretEnv:
       - DATABASE_PASS
       - CRED_FILE
@@ -29,7 +28,7 @@ steps:
       - -c
       - |
         echo "testing"
-        echo ${ENV_NAME}
+        echo ${_ENV_NAME}
         bash workspace/env.sh
       # go install github.com/jstemmer/go-junit-report/v2@latest
       # 2>&1 go test -timeout 1m -v ./... | /go/bin/go-junit-report -set-exit-code -iocopy -out ${SHORT_SHA}_test_log.xml
@@ -54,6 +53,7 @@ substitutions:
   _DATABASE_TYPE: mysql
   _DATABASE_PASSWORD_KEY: db-dev-password
   _IMAGE_NAME: gcr.io/${PROJECT_ID}/sample-sql-proxy
+  _ENV_NAME: dev
 
 availableSecrets:
   secretManager:
