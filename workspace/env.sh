@@ -1,9 +1,9 @@
 #!/bin/bash
 
-if [ $ENV_PASS="dev" ]; then
-    echo "dev env";
+if [ $ENV_PASS="prod" ]; then
+    echo "prod env";
 else
-    echo "prod";
+    echo "dev";
 fi
 
 echo ${_INSTANCE_CONNECTION_NAME}
