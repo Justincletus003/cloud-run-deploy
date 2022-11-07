@@ -1,18 +1,14 @@
 version: 2.1
-commands:
-  install-binary:
+commands:  
+  set_project:
+    description: Command to set project
     steps:
       - run: |
-          echo "hello world!"
-  
-  # set_project:
-  #   description: Command to set project
-  #   steps:
-  #     - run: |
-  #         sudo apt-get install -qq -y gettext
-  #         echo ${cideployer} > ${HOME}/gcloud-service-key.json
-  #         gcloud auth activate-service-account --key-file=${HOME}/gcloud-service-key.json
-  #         gcloud --quiet config set project ${GOOGLE_PROJECT_ID}
+          sudo apt-get install -qq -y gettext
+          echo ${cideployer} > ${HOME}/gcloud-service-key.json
+          gcloud auth activate-service-account --key-file=${HOME}/gcloud-service-key.json
+          gcloud --quiet config set project ${GOOGLE_PROJECT_ID}
+          gcloud config get-value project
   
   # deploy_to_prod:
   #   docker:
@@ -72,7 +68,7 @@ jobs:
     working_directory: ~/project
     steps:
       - checkout
-      - install-binary
+      - set_project
 
 workflows:
   test_my_app:
