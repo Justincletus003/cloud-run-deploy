@@ -15,8 +15,8 @@ commands:
           echo ${cideployer} > ${HOME}/gcloud-service-key.json
           gcloud auth activate-service-account --key-file=${HOME}/gcloud-service-key.json
           gcloud --quiet config set project ${GOOGLE_PROJECT_ID}
-          export ENV_NAME="TEST"
-          envsubst < test.yml       
+          envsubst < test.yml
+             
           cat test.yml
   
   # deploy_to_prod:
@@ -80,6 +80,7 @@ jobs:
       PROJECT_NAME: "db-migration-dev"
       GOOGLE_PROJECT_ID: "pantheon-buildhook"
       GOOGLE_COMPUTE_REGION: "us-central1"
+      ENV_NAME: "HELLO"
     steps:
       - checkout
       - set_project
