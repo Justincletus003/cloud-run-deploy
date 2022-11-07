@@ -15,7 +15,9 @@ commands:
           echo ${cideployer} > ${HOME}/gcloud-service-key.json
           gcloud auth activate-service-account --key-file=${HOME}/gcloud-service-key.json
           gcloud --quiet config set project ${GOOGLE_PROJECT_ID}
-          gcloud config get-value project
+          export ENV_NAME="TEST"
+          envsubst < test.yml       
+          cat test.yml
   
   # deploy_to_prod:
   #   docker:
@@ -81,9 +83,27 @@ jobs:
     steps:
       - checkout
       - set_project
+  
+  db_migration:
+    docker:
+      - image: google/cloud-sdk
+    working_directory: ~/project
+    environment:
+      PROJECT_NAME: "db-migration-dev"
+      GOOGLE_PROJECT_ID: "pantheon-buildhook"
+    steps:
+      - checkout
+      - set_project
+      - run:
+          command: |
+            gcloud config get-value project   
+            export ENV_NAME="TEST"
+            envsubst < test.yml       
+            cat test.yml
 
 workflows:
   version: 2
   test_my_app:
     jobs:
       - build
+    # - db_migration
