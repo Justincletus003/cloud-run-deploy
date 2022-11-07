@@ -1,5 +1,7 @@
 #!/bin/bash
 
+echo ${_ENV_NAME}
+
 if [ ${_ENV_NAME}="prod" ]
 then
     echo "prod env";
