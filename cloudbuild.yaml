@@ -52,7 +52,7 @@ substitutions:
   _DATABASE_TYPE: mysql
   _DATABASE_PASSWORD_KEY: db-dev-password
   _IMAGE_NAME: gcr.io/${PROJECT_ID}/sample-sql-proxy
-  _ENV_NAME: ${ENV_NAME}
+  _ENV_NAME: "dev"
 
 availableSecrets:
   secretManager:
