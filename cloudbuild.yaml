@@ -27,7 +27,6 @@ steps:
     args:
       - -c
       - |
-        echo "testing"
         echo ${_ENV_NAME}
         bash workspace/env.sh
       # go install github.com/jstemmer/go-junit-report/v2@latest

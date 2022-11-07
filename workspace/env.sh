@@ -1,6 +1,8 @@
 #!/bin/bash
 
-echo ${_ENV_NAME}
+echo "hello";
+echo ${_ENV_NAME}---;
+echo "world";
 
 if [ ${_ENV_NAME}="prod" ]
 then
