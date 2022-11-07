@@ -74,6 +74,10 @@ jobs:
       image: ubuntu-2004:current
       docker_layer_caching: true
     working_directory: ~/project
+    environment:
+      PROJECT_NAME: "db-migration-dev"
+      GOOGLE_PROJECT_ID: "pantheon-buildhook"
+      GOOGLE_COMPUTE_REGION: "us-central1"
     steps:
       - checkout
       - set_project
