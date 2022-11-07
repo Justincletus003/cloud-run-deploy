@@ -70,14 +70,16 @@ commands:
 
 jobs:
   build:
-    docker:
-      - image: cimg/base:2022.09
+    machine:
+      image: ubuntu-2004:current
+      docker_layer_caching: true
     working_directory: ~/project
     steps:
       - checkout
       - set_project
 
 workflows:
+  version: 2
   test_my_app:
     jobs:
       - build
