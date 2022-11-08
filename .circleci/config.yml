@@ -49,6 +49,36 @@ jobs:
       - run: |
           echo "build2"
   
+  deploy_to_sandbox:
+    machine:
+      image: ubuntu-2004:current
+      docker_layer_caching: true
+    working_directory: ~/project
+    environment:
+      PROJECT_NAME: "db-migration-dev"
+      GOOGLE_PROJECT_ID: "pantheon-buildhook"
+      GOOGLE_COMPUTE_REGION: "us-central1"
+      ENV_NAME: dev
+    steps:
+      - checkout
+      - run: |
+          echo "deploy to sandbox"
+  
+  deploy_prod:
+    machine:
+      image: ubuntu-2004:current
+      docker_layer_caching: true
+    working_directory: ~/project
+    environment:
+      PROJECT_NAME: "db-migration-dev"
+      GOOGLE_PROJECT_ID: "pantheon-buildhook"
+      GOOGLE_COMPUTE_REGION: "us-central1"
+      ENV_NAME: dev
+    steps:
+      - checkout
+      - run: |
+          echo "deploy to prod"
+  
 workflows:
   version: 2
   test_my_app:
@@ -76,7 +106,7 @@ workflows:
             branches:
               only:
                 - main
-      - deploy-prod:
+      - deploy_prod:
           requires:
             - hold_prod_deployment
             - build2
