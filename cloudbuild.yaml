@@ -24,7 +24,7 @@ steps:
     secretEnv:
       - DATABASE_PASS
       - CRED_FILE
-    command:
+    commands:
       - run: |
           echo ${_ENV_NAME}
           if [[ "${_ENV_NAME}" == "prod" ]]; then
