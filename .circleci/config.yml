@@ -16,7 +16,7 @@ commands:
           gcloud auth activate-service-account --key-file=${HOME}/gcloud-service-key.json
           gcloud --quiet config set project ${GOOGLE_PROJECT_ID}
           envsubst < cloudbuild.yaml
-          gcloud build submit --region=us-central1 --config build-config --no-source
+          gcloud builds submit --region=us-central1 --config build-config --no-source
   
 
 jobs:
