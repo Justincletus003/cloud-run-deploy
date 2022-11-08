@@ -33,23 +33,94 @@ jobs:
       - run: |
           gcloud builds submit --region=us-central1 --config sql/cloudbuild.yaml sql --substitutions=_ENV_NAME="${ENV_NAME}"
   
-  db_migration:
-    docker:
-      - image: google/cloud-sdk
+  build2:
+    machine:
+      image: ubuntu-2004:current
+      docker_layer_caching: true
     working_directory: ~/project
     environment:
       PROJECT_NAME: "db-migration-dev"
       GOOGLE_PROJECT_ID: "pantheon-buildhook"
+      GOOGLE_COMPUTE_REGION: "us-central1"
+      ENV_NAME: dev
     steps:
       - checkout
       - set_project
-      - run:
-          command: |
-            gcloud config get-value project
-
+      - run: |
+          echo "build2"
+  
 workflows:
   version: 2
   test_my_app:
     jobs:
-      - build
-    # - db_migration
+      - hold_sandbox_deployment:
+          type: approval
+          requires:
+            - build
+          filters:
+            branches:
+              only:
+                - main
+      - deploy_to_sandbox:
+          requires:
+            - hold_sandbox_deployment
+          filters:
+            branches:
+              only:
+                - main
+      - hold_prod_deployment:
+          type: approval
+          requires:
+            - deploy_to_sandbox
+          filters:
+            branches:
+              only:
+                - main
+      - deploy-prod:
+          requires:
+            - hold_prod_deployment
+            - build2
+          filters:
+            branches:
+              only:
+                - main
+        
+
+# - db_migration
+
+# workflows:
+#   version: 2
+#   test-build-deploy:
+#     jobs:
+#       - test
+#       - hold_sandbox_deployment:
+#           type: approval
+#           requires:
+#             - sandbox-db-migration
+#           filters:
+#             branches:
+#               only:
+#                 - main
+#       - deploy_to_sandbox:
+#           requires:
+#             - hold_sandbox_deployment
+#           filters:
+#             branches:
+#               only:
+#                 - main
+#       - hold_prod_deployment:
+#           type: approval
+#           requires:
+#             - deploy_to_sandbox
+#             - prod-db-migration
+#           filters:
+#             branches:
+#               only:
+#                 - main
+#       - deploy_to_prod:
+#           requires:
+#             - hold_prod_deployment
+#           filters:
+#             branches:
+#               only:
+#                 - main
