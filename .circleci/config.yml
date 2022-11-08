@@ -26,15 +26,12 @@ jobs:
       PROJECT_NAME: "db-migration-dev"
       GOOGLE_PROJECT_ID: "pantheon-buildhook"
       GOOGLE_COMPUTE_REGION: "us-central1"
-      ENV_NAME: prod
-      _IMAGE_NAME: "gcr.io/pantheon-buildhook/sample-sql-proxy"
+      ENV_NAME: dev
     steps:
       - checkout
       - set_project
       - run: |
-          echo ${ENV_NAME} ${_IMAGE_NAME}
-          gcloud builds submit --region=us-central1 --config cloudbuild.yaml --no-source --substitutions=_IMAGE_NAME=${_IMAGE_NAME},_ENV_NAME="${ENV_NAME}"
-      # envsubst < cloudbuild.yaml
+          gcloud builds submit --region=us-central1 --config sql/cloudbuild.yaml sql --substitutions=_ENV_NAME="${ENV_NAME}"
   
   db_migration:
     docker:
