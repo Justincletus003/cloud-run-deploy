@@ -31,7 +31,7 @@ jobs:
       - checkout
       - set_project
       - run: |
-          gcloud builds submit --region=us-central1 --config sql/cloudbuild.yaml sql --substitutions=_ENV_NAME="${ENV_NAME}"
+          echo "testing approval flow"       
   
   build2:
     machine:
@@ -62,7 +62,7 @@ jobs:
     steps:
       - checkout
       - run: |
-          echo "deploy to sandbox"
+          gcloud builds submit --region=us-central1 --config sql/cloudbuild.yaml sql --substitutions=_ENV_NAME="${ENV_NAME}"
   
   deploy_prod:
     machine:
@@ -85,11 +85,13 @@ workflows:
     jobs:
       - hold_sandbox_deployment:
           type: approval
+          jobs:
+            - build
           filters:
             branches:
               only:
                 - main
-      - build
+      
       - deploy_to_sandbox:
           requires:
             - hold_sandbox_deployment
