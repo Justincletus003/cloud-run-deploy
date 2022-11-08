@@ -27,8 +27,8 @@ steps:
     args:
       - -c
       - |
-        echo ${_ENV_NAME}
-        if [[ "${_ENV_NAME}" == "prod" ]]; then
+        echo ${ENV_NAME}
+        if [[ "${ENV_NAME}" == "prod" ]]; then
             echo "hello";
         else
             echo "world";
