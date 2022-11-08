@@ -14,10 +14,7 @@ commands:
           sudo apt-get install -qq -y gettext
           echo ${cideployer} > ${HOME}/gcloud-service-key.json
           gcloud auth activate-service-account --key-file=${HOME}/gcloud-service-key.json
-          gcloud --quiet config set project ${GOOGLE_PROJECT_ID}
-          envsubst < cloudbuild.yaml
-          gcloud builds submit --region=us-central1 --config cloudbuild.yaml --no-source
-  
+          gcloud --quiet config set project ${GOOGLE_PROJECT_ID}  
 
 jobs:
   build:
@@ -29,10 +26,13 @@ jobs:
       PROJECT_NAME: "db-migration-dev"
       GOOGLE_PROJECT_ID: "pantheon-buildhook"
       GOOGLE_COMPUTE_REGION: "us-central1"
-      ENV_NAME: "prod"
+      ENV_NAME: prod
     steps:
       - checkout
       - set_project
+      - run: |
+          envsubst < cloudbuild.yaml
+          gcloud builds submit --region=us-central1 --config cloudbuild.yaml --no-source
   
   db_migration:
     docker:
