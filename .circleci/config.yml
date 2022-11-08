@@ -14,7 +14,7 @@ commands:
           sudo apt-get install -qq -y gettext
           echo ${cideployer} > ${HOME}/gcloud-service-key.json
           gcloud auth activate-service-account --key-file=${HOME}/gcloud-service-key.json
-          gcloud --quiet config set project ${GOOGLE_PROJECT_ID}  
+          gcloud --quiet config set project ${GOOGLE_PROJECT_ID}
 
 jobs:
   build:
@@ -30,9 +30,9 @@ jobs:
     steps:
       - checkout
       - set_project
-      - run: |
-          envsubst < cloudbuild.yaml
+      - run: |        
           gcloud builds submit --region=us-central1 --config cloudbuild.yaml --no-source
+      # envsubst < cloudbuild.yaml
   
   db_migration:
     docker:

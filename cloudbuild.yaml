@@ -27,7 +27,7 @@ steps:
     args:
       - -c
       - |
-
+        echo ${_ENV_NAME}
         echo ${ENV_NAME}
         if [[ "${ENV_NAME}" == "prod" ]]; then
             echo "hello";
@@ -57,6 +57,7 @@ substitutions:
   _DATABASE_TYPE: mysql
   _DATABASE_PASSWORD_KEY: db-dev-password
   _IMAGE_NAME: gcr.io/pantheon-buildhook/sample-sql-proxy
+  _ENV_NAME: ${ENV_NAME}
 
 availableSecrets:
   secretManager:
