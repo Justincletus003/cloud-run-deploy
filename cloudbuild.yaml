@@ -33,7 +33,7 @@ steps:
         else
             echo "world";
         fi
-        bash workspace/env.sh
+      # bash workspace/env.sh
       # go install github.com/jstemmer/go-junit-report/v2@latest
       # 2>&1 go test -timeout 1m -v ./... | /go/bin/go-junit-report -set-exit-code -iocopy -out ${SHORT_SHA}_test_log.xml
       
@@ -55,7 +55,6 @@ substitutions:
   _INSTANCE_CONNECTION_NAME: pantheon-buildhook:us-central1:buildhk
   _DATABASE_TYPE: mysql
   _DATABASE_PASSWORD_KEY: db-dev-password
-  _ENV_NAME: ${ENV_NAME}
 
 availableSecrets:
   secretManager:
