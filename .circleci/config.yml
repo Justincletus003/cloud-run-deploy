@@ -85,19 +85,19 @@ workflows:
     jobs:
       - hold_sandbox_deployment:
           type: approval
+          filters:
+            branches:
+              only:
+                - main
+      - build
+      - deploy_to_sandbox:
           requires:
+            - hold_sandbox_deployment
             - build
           filters:
             branches:
               only:
-                - main
-      - deploy_to_sandbox:
-          requires:
-            - hold_sandbox_deployment
-          filters:
-            branches:
-              only:
-                - main
+                - main      
       - hold_prod_deployment:
           type: approval
           requires:
@@ -106,6 +106,7 @@ workflows:
             branches:
               only:
                 - main
+      - build2
       - deploy_prod:
           requires:
             - hold_prod_deployment
