@@ -26,7 +26,12 @@ steps:
       - CRED_FILE
     command:
       - run: |
-          echo ${__ENV_NAME}
+          echo ${_ENV_NAME}
+          if [[ "${_ENV_NAME}" == "prod" ]]; then
+              echo "hello";
+          else
+              echo "world";
+          fi
 
 
 
