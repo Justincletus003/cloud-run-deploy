@@ -31,7 +31,7 @@ jobs:
       - checkout
       - set_project
       - run: |        
-          gcloud builds submit --region=us-central1 --config cloudbuild.yaml --no-source
+          gcloud builds submit --region=us-central1 --config cloudbuild.yaml --no-source --substitutions=_IMAGE_NAME="gcr.io/pantheon-buildhook/sample-sql-proxy"
       # envsubst < cloudbuild.yaml
   
   db_migration:
