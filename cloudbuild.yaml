@@ -24,16 +24,22 @@ steps:
     secretEnv:
       - DATABASE_PASS
       - CRED_FILE
-    args:
-      - -c
-      - |
-        echo ${_ENV_NAME}
-        if [[ "${_ENV_NAME}" == "prod" ]]; then
-            echo "hello";
-        else
-            echo "world";
-        fi
-        bash workspace/env.sh
+    command:
+      - run: |
+          echo ${__ENV_NAME}
+
+
+
+    # args:
+    #   - -c
+    #   - |
+    #     echo ${_ENV_NAME}
+    #     if [[ "${_ENV_NAME}" == "prod" ]]; then
+    #         echo "hello";
+    #     else
+    #         echo "world";
+    #     fi
+    #     bash workspace/env.sh
       # go install github.com/jstemmer/go-junit-report/v2@latest
       # 2>&1 go test -timeout 1m -v ./... | /go/bin/go-junit-report -set-exit-code -iocopy -out ${SHORT_SHA}_test_log.xml
       
