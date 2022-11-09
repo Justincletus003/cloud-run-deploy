@@ -115,7 +115,7 @@ workflows:
             branches:
               only:
                 - main      
-      - deploy_to_sandbox_new:
+      - deploy_to_sandbox:
           requires:
             - hold_sandbox_deployment
           filters:
@@ -125,7 +125,7 @@ workflows:
       - hold_prod_deployment:
           type: approval
           requires:
-            - deploy_to_sandbox_new
+            - deploy_to_sandbox
           filters:
             branches:
               only:
