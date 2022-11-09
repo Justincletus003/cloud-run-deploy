@@ -61,8 +61,10 @@ jobs:
       ENV_NAME: dev
     steps:
       - checkout
-      - set_project
       - run: |
+          echo ${cideployer} > ${HOME}/gcloud-service-key.json
+          gcloud auth activate-service-account --key-file=${HOME}/gcloud-service-key.json
+          gcloud --quiet config set project ${GOOGLE_PROJECT_ID}
           gcloud builds submit --region=us-central1 --config sql/cloudbuild.yaml sql --substitutions=_ENV_NAME="${ENV_NAME}"
   
   deploy_prod:
