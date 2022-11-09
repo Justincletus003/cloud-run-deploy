@@ -58,7 +58,7 @@ jobs:
       PROJECT_NAME: "db-migration-dev"
       GOOGLE_PROJECT_ID: "pantheon-buildhook"
       GOOGLE_COMPUTE_REGION: "us-central1"
-      ENV_NAME: dev
+      ENV_NAME: prod
     steps:
       - checkout
       - run: |
