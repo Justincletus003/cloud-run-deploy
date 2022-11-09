@@ -34,7 +34,7 @@ steps:
             bash workspace/env.sh
             db_prod_pass=$(cat DB_PROD_PASS)
             /workspace/cloud_sql_proxy -dir=/workspace -instances=${_INSTANCE_CONNECTION_NAME}=tcp:3306 -credential_file=cloud-sa.json & sleep 2 && \
-            flyway -url=jdbc:mysql://127.0.0.1:3306/buildhook -user=user -password=${db_prod_pass} -connectRetries=60 -schemas=buildhook -validateOnMigrate=false -locations="filesystem:./migrations" repair && \
+            flyway -url=jdbc:mysql://127.0.0.1:3306/buildhook -user=user -password=${db_prod_pass} -connectRetries=60 -schemas=buildhook -validateOnMigrate=false  -locations="filesystem:./migrations" repair && \
             flyway -url=jdbc:mysql://127.0.0.1:3306/buildhook -user=user -password=${db_prod_pass} -connectRetries=60 -schemas=buildhook -validateOnMigrate=false -locations="filesystem:./migrations" migrate            
             
         elif [[ "${_ENV_NAME}" == "dev" ]]; then
