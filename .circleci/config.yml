@@ -113,7 +113,7 @@ workflows:
           filters:
             branches:
               only:
-                - /*./
+                - /.*/
       - hold_prod_deployment:
           type: approval
           requires:
