@@ -115,6 +115,7 @@ workflows:
             branches:
               only:
                 - main
+                - /t-.*/
       - hold_prod_deployment:
           type: approval
           requires:
