@@ -107,13 +107,14 @@ workflows:
             branches:
               only:
                 - main
+                - /t-.*/
       - deploy_to_sandbox:
           requires:
             - hold_sandbox_deployment
           filters:
             branches:
               only:
-                - /.*/
+                - main
       - hold_prod_deployment:
           type: approval
           requires:
