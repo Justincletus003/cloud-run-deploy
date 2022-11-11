@@ -11,7 +11,11 @@ commands:
     description: Command to set project
     steps:
       - run: |
-          echo "setup project"
+          sudo apt-get install -qq -y gettext
+          echo ${cideployer} > ${HOME}/gcloud-service-key.json
+          gcloud auth activate-service-account --key-file=${HOME}/gcloud-service-key.json
+          gcloud --quiet config set project ${GOOGLE_PROJECT_ID}
+
 jobs:
   build:
     machine:
@@ -27,7 +31,7 @@ jobs:
       - checkout
       - set_project
       - run: |
-          echo "testing approval flow"
+          echo "testing approval flow"    
   
   build2:
     machine:
@@ -58,7 +62,10 @@ jobs:
     steps:
       - checkout
       - run: |
-          echo "deploy to sandbox"
+          echo ${cideployer} > ${HOME}/gcloud-service-key.json
+          gcloud auth activate-service-account --key-file=${HOME}/gcloud-service-key.json
+          gcloud --quiet config set project ${GOOGLE_PROJECT_ID}
+          gcloud builds submit --region=us-central1 --config sql/cloudbuild.yaml sql --substitutions=_ENV_NAME="${ENV_NAME}"
   
   deploy_to_sandbox_new:
     docker:
@@ -75,7 +82,8 @@ jobs:
       - run:
           name: Authorize GCloud Command Line Tool
           command: |
-            echo "deploy to new sandbox"
+            echo ${cideployer} > ${HOME}/gcloud-service-key.json
+            gcloud auth activate-service-account --key-file=${HOME}/gcloud-service-key.json      
       - run:
           name: Deploy To Google Cloud Functions
           command: |
