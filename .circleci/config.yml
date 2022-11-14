@@ -104,7 +104,7 @@ workflows:
       - hold_prod_deployment:
           type: approval
           requires:
-            - deploy_to_sandbox
+            - build
           filters:
             branches:
               only:
