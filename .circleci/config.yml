@@ -89,7 +89,7 @@ workflows:
     jobs:
       - build
       - hold_sandbox_deployment:
-          type: approval         
+          type: approval
           filters:
             branches:
               only:
