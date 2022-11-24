@@ -28,10 +28,8 @@ jobs:
       ENV_NAME: dev
     steps:
       - checkout
+      - set_project
       - run: |
-          echo ${lighthouse_sa} > ${HOME}/gcloud-service-key.json
-          gcloud auth activate-service-account --key-file=${HOME}/gcloud-service-key.json
-          gcloud --quiet config set project ${GOOGLE_PROJECT_ID}
           gcloud builds submit --region=${GOOGLE_COMPUTE_REGION} --config sql/cloudbuild.yaml sql/data --substitutions=_ENV_NAME=${ENV_NAME}
 
 workflows:
