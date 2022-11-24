@@ -1,0 +1,53 @@
+insert into lighthouses (
+    session_uid,
+    requesting_source_id,
+    requesting_tech_id,
+    status_id,
+    started_at,
+    finished_at,
+    user_uid,
+    site_uid,
+    label,
+    org_uid,
+    base_url,
+    result_url
+) values (
+    uuid(),
+    2,
+    2,
+    2,
+    (UNIX_TIMESTAMP() - 50),
+    UNIX_TIMESTAMP(),
+    0.92,
+    uuid(),
+    uuid(),
+    'https://www.pantheon.io/old-site/',
+    'https://www.pantheon.io/my-site/',
+    'https://drive.google.com/12934h923n23/pic.png'
+), (
+    uuid(),
+    3,
+    1,
+    3,
+    (UNIX_TIMESTAMP() - 25),
+    UNIX_TIMESTAMP(),
+    0.96,
+    uuid(),
+    uuid(),
+    'https://www.pantheon.io/old-site/',
+    'https://www.pantheon.io/my-site/',
+    'https://drive.google.com/asgfasdtr4/pic.png'
+), (
+    uuid(),
+    1,
+    2,
+    1,
+    (UNIX_TIMESTAMP() - 10),
+    UNIX_TIMESTAMP(),
+    0.90,
+    uuid(),
+    uuid(),
+    'https://www.pantheon.io/old-site/',
+    '',
+    ''
+);

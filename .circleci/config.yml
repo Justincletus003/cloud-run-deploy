@@ -11,107 +11,40 @@ commands:
     description: Command to set project
     steps:
       - run: |
-          echo "setup project"
+          sudo apt-get install -qq -y gettext
+          echo ${lighthouse_sa} > ${HOME}/gcloud-service-key.json
+          gcloud auth activate-service-account --key-file=${HOME}/gcloud-service-key.json
+          gcloud --quiet config set project ${GOOGLE_PROJECT_ID}
 jobs:
-  build:
+  db-migration:
     machine:
       image: ubuntu-2004:current
       docker_layer_caching: true
     working_directory: ~/project
     environment:
       PROJECT_NAME: "db-migration-dev"
-      GOOGLE_PROJECT_ID: "pantheon-buildhook"
+      GOOGLE_PROJECT_ID: "pantheon-lighthouse"
       GOOGLE_COMPUTE_REGION: "us-central1"
       ENV_NAME: dev
     steps:
       - checkout
       - set_project
       - run: |
-          echo "testing approval flow"
-          git status
-    
-  deploy_to_sandbox:
-    machine:
-      image: ubuntu-2004:current
-      docker_layer_caching: true
-    working_directory: ~/project
-    environment:
-      PROJECT_NAME: "db-migration-dev"
-      GOOGLE_PROJECT_ID: "pantheon-buildhook"
-      GOOGLE_COMPUTE_REGION: "us-central1"
-      ENV_NAME: dev
-    steps:
-      - checkout
-      - run: |
-          echo "deploy to sandbox"
-          git status
-  
-  deploy_to_sandbox_new:
-    docker:
-      - image: google/cloud-sdk
-    working_directory: ~/project
-    environment:
-      PROJECT_NAME: "buildhook-service-sbx"
-      GOOGLE_PROJECT_ID: "pantheon-buildhook"
-      FUNCTION_NAME: "buildhook-service-sbx"
-      ENTRYPOINT: BuildhookEntry
-      BUCKNAME: "buildhook-service"
-    steps:
-      - checkout
-      - run:
-          name: Authorize GCloud Command Line Tool
-          command: |
-            echo "deploy to new sandbox"
-      - run:
-          name: Deploy To Google Cloud Functions
-          command: |
-            echo "hello world"
-  
-  deploy_prod:
-    machine:
-      image: ubuntu-2004:current
-      docker_layer_caching: true
-    working_directory: ~/project
-    environment:
-      PROJECT_NAME: "db-migration-dev"
-      GOOGLE_PROJECT_ID: "pantheon-buildhook"
-      GOOGLE_COMPUTE_REGION: "us-central1"
-      ENV_NAME: prod
-    steps:
-      - checkout
-      - run: |
-          echo "deploy to prod"
-          git status
-  
+          gcloud builds submit --region=${GOOGLE_COMPUTE_REGION} --CONFIG sql/cloudbuild.yml sql/data --substitutions=_ENV_NAME=${ENV_NAME}
+
 workflows:
   version: 2
   test_my_app:
     jobs:
-      - build
-      - hold_sandbox_deployment:
-          type: approval         
-          filters:
-            branches:
-              only:
-                - stage
-      - deploy_to_sandbox:
-          requires:
-            - hold_sandbox_deployment
-          filters:
-            branches:
-              only:
-                - stage
-      - hold_prod_deployment:
+      - hold_db_migration:
           type: approval
-          requires:
-            - build
           filters:
             branches:
               only:
                 - main
-      - deploy_prod:
+      - db-migration:
           requires:
-            - hold_prod_deployment
+            - hold_db_migration
           filters:
             branches:
               only:

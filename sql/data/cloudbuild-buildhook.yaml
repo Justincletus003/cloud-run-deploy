@@ -52,24 +52,23 @@ steps:
         fi      
 
 options:
-  logging: CLOUD_LOGGING_ONLY
   dynamic_substitutions: true
 
 substitutions:
   _DATABASE_USER: sandbox_user
-  _DATABASE_NAME: lh_sandbox
-  _INSTANCE_CONNECTION_NAME: pantheon-lighthouse:us-central1:lighthouse
+  _DATABASE_NAME: bh_sandbox
+  _INSTANCE_CONNECTION_NAME: pantheon-buildhook:us-central1:buildhk
   _DATABASE_TYPE: mysql
-  _DATABASE_PASSWORD_KEY: sbx-user-pwd
-  _DATABASE_PROD_PASSWORD_KEY: prod-user-pwd
+  _DATABASE_PASSWORD_KEY: db-dev-password
+  _DATABASE_PROD_PASSWORD_KEY: db-prod-password
   _ENV_NAME: dev
 
 availableSecrets:
   secretManager:
-    - versionName: projects/pantheon-lighthouse/secrets/${_DATABASE_PASSWORD_KEY}/versions/latest
+    - versionName: projects/pantheon-buildhook/secrets/${_DATABASE_PASSWORD_KEY}/versions/latest
       env: DATABASE_PASS
-    - versionName: projects/pantheon-lighthouse/secrets/${_DATABASE_PROD_PASSWORD_KEY}/versions/latest
+    - versionName: projects/pantheon-buildhook/secrets/${_DATABASE_PROD_PASSWORD_KEY}/versions/latest
       env: DATABASE_PROD_PASS
-    - versionName: projects/pantheon-lighthouse/secrets/sa-sql-key/versions/latest
+    - versionName: projects/pantheon-buildhook/secrets/sa-sql-key/versions/latest
       env: CRED_FILE
 # [END cloudbuild_sql_proxy]

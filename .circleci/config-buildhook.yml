@@ -1,0 +1,118 @@
+version: 2.1
+executors:
+  go-build:
+    docker:
+      - image: quay.io/getpantheon/go-build:latest
+        auth:
+          username: $QUAY_USER
+          password: $QUAY_PASSWD
+commands:  
+  set_project:
+    description: Command to set project
+    steps:
+      - run: |
+          echo "setup project"
+jobs:
+  build:
+    machine:
+      image: ubuntu-2004:current
+      docker_layer_caching: true
+    working_directory: ~/project
+    environment:
+      PROJECT_NAME: "db-migration-dev"
+      GOOGLE_PROJECT_ID: "pantheon-buildhook"
+      GOOGLE_COMPUTE_REGION: "us-central1"
+      ENV_NAME: dev
+    steps:
+      - checkout
+      - set_project
+      - run: |
+          echo "testing approval flow"
+          git status
+    
+  deploy_to_sandbox:
+    machine:
+      image: ubuntu-2004:current
+      docker_layer_caching: true
+    working_directory: ~/project
+    environment:
+      PROJECT_NAME: "db-migration-dev"
+      GOOGLE_PROJECT_ID: "pantheon-buildhook"
+      GOOGLE_COMPUTE_REGION: "us-central1"
+      ENV_NAME: dev
+    steps:
+      - checkout
+      - run: |
+          echo "deploy to sandbox"
+          git status
+  
+  deploy_to_sandbox_new:
+    docker:
+      - image: google/cloud-sdk
+    working_directory: ~/project
+    environment:
+      PROJECT_NAME: "buildhook-service-sbx"
+      GOOGLE_PROJECT_ID: "pantheon-buildhook"
+      FUNCTION_NAME: "buildhook-service-sbx"
+      ENTRYPOINT: BuildhookEntry
+      BUCKNAME: "buildhook-service"
+    steps:
+      - checkout
+      - run:
+          name: Authorize GCloud Command Line Tool
+          command: |
+            echo "deploy to new sandbox"
+      - run:
+          name: Deploy To Google Cloud Functions
+          command: |
+            echo "hello world"
+  
+  deploy_prod:
+    machine:
+      image: ubuntu-2004:current
+      docker_layer_caching: true
+    working_directory: ~/project
+    environment:
+      PROJECT_NAME: "db-migration-dev"
+      GOOGLE_PROJECT_ID: "pantheon-buildhook"
+      GOOGLE_COMPUTE_REGION: "us-central1"
+      ENV_NAME: prod
+    steps:
+      - checkout
+      - run: |
+          echo "deploy to prod"
+          git status
+  
+workflows:
+  version: 2
+  test_my_app:
+    jobs:
+      - build
+      - hold_sandbox_deployment:
+          type: approval         
+          filters:
+            branches:
+              only:
+                - stage
+      - deploy_to_sandbox:
+          requires:
+            - hold_sandbox_deployment
+          filters:
+            branches:
+              only:
+                - stage
+      - hold_prod_deployment:
+          type: approval
+          requires:
+            - build
+          filters:
+            branches:
+              only:
+                - main
+      - deploy_prod:
+          requires:
+            - hold_prod_deployment
+          filters:
+            branches:
+              only:
+                - main
