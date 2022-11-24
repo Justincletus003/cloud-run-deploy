@@ -30,7 +30,7 @@ jobs:
       - checkout
       - set_project
       - run: |
-          gcloud builds submit --region=${GOOGLE_COMPUTE_REGION} --CONFIG sql/cloudbuild.yml sql/data --substitutions=_ENV_NAME=${ENV_NAME}
+          gcloud builds submit --region=${GOOGLE_COMPUTE_REGION} --config sql/cloudbuild.yaml sql/data --substitutions=_ENV_NAME=${ENV_NAME}
 
 workflows:
   version: 2
